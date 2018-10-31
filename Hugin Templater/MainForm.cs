@@ -65,12 +65,20 @@ namespace Hugin_Templater
                     output += line.Substring(0, imageMatch.Groups[2].Index) + Path.GetFileName(tiffEnumerator.Current) + @"""" + Environment.NewLine;
                 }
             }
+
             if (tiffEnumerator.MoveNext())
             {
                 MessageBox.Show("Too many files!");
                 return;
             }
-            MessageBox.Show("Done.");
+
+            ptoSaveFileDialog.FileName = Path.GetFullPath(tbTiffFolder.Text);
+            if (ptoSaveFileDialog.ShowDialog()!=DialogResult.OK)
+            {
+                return;
+            }
+
+            File.WriteAllText(ptoSaveFileDialog.FileName, output);
         }
     }
 }

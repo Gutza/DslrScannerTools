@@ -37,6 +37,7 @@
             this.lbTiffFolder = new System.Windows.Forms.Label();
             this.tiffOpenFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.btnProcess = new System.Windows.Forms.Button();
+            this.ptoSaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // lblTemplateFile
@@ -141,6 +142,7 @@
         private System.Windows.Forms.Label lbTiffFolder;
         private System.Windows.Forms.FolderBrowserDialog tiffOpenFolderDialog;
         private System.Windows.Forms.Button btnProcess;
+        private System.Windows.Forms.SaveFileDialog ptoSaveFileDialog;
     }
 }
 
