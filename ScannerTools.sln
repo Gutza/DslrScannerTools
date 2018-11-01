@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hugin Templater", "Hugin Templater\Hugin Templater.csproj", "{7816C851-4097-4695-953C-E2BC19C690EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbExperiment", "UsbExperiment\UsbExperiment.csproj", "{6A495F79-B586-436B-BF09-47ACA782FD2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7816C851-4097-4695-953C-E2BC19C690EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7816C851-4097-4695-953C-E2BC19C690EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7816C851-4097-4695-953C-E2BC19C690EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
