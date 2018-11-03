@@ -8,6 +8,7 @@ namespace DSLR_Digitizer
     public partial class MainScannerForm : Form
     {
         List<ScannerIcon> NavigationIcons;
+        string ComPort = null;
 
         public MainScannerForm()
         {
@@ -27,17 +28,23 @@ namespace DSLR_Digitizer
 
             ResetCommPortList();
             RawComms.OnLogMessage += RawCommsLogMessage;
-            RawComms.OnLogScanner += RawCommsLogScanner;
+            RawComms.OnLogScannerOutput += RawCommsLogScannerOutput;
+            RawComms.OnLogScannerCommand += RawCommsLogScannerCommand;
         }
 
-        private void RawCommsLogScanner(object sender, string datagram)
+        private void RawCommsLogScannerOutput(object sender, string datagram)
         {
-            Log("Scanner: " + datagram);
+            LogScannerIn(datagram);
+        }
+
+        private void RawCommsLogScannerCommand(object sender, string datagram)
+        {
+            LogScannerOut(datagram);
         }
 
         private void RawCommsLogMessage(object sender, string message)
         {
-            Log("Driver: " + message);
+            LogMessage("Driver: " + message);
         }
 
         private void ResetNavigation(ScannerIcon.IconStates iconState = ScannerIcon.IconStates.Active)
@@ -79,7 +86,14 @@ namespace DSLR_Digitizer
             {
                 return;
             }
-            var result = RawComms.SetPort(commPortCombo.SelectedItem.ToString(), 115200);
+
+            var selectedPort = commPortCombo.SelectedItem.ToString();
+            if (ComPort!=null && ComPort.Equals(selectedPort))
+            {
+                return;
+            }
+
+            var result = RawComms.SetPort(selectedPort, 115200);
             if (result == PortStatus.Ok)
             {
                 navigationGroup.Enabled = true;
@@ -90,11 +104,22 @@ namespace DSLR_Digitizer
                 navigationGroup.Enabled = false;
                 ResetNavigation(ScannerIcon.IconStates.Disabled);
             }
+            ComPort = selectedPort;
         }
 
-        public void Log(string message)
+        public void LogMessage(string message)
         {
-            tbLog.Text += message + Environment.NewLine;
+            tbMessageLog.Text += message + Environment.NewLine;
+        }
+
+        public void LogScannerIn(string datagram)
+        {
+            tbScanLog.Invoke(new MethodInvoker(delegate{ tbScanLog.Text += "< " + datagram + Environment.NewLine; }));
+        }
+
+        public void LogScannerOut(string datagram)
+        {
+            tbScanLog.Text += "> " + datagram + Environment.NewLine;
         }
     }
 }

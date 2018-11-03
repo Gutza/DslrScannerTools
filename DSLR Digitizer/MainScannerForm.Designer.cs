@@ -34,22 +34,23 @@
             this.btnRefreshCommPortList = new System.Windows.Forms.Button();
             this.commPortCombo = new System.Windows.Forms.ComboBox();
             this.lblComPort = new System.Windows.Forms.Label();
+            this.logBox = new System.Windows.Forms.GroupBox();
+            this.tbMessageLog = new System.Windows.Forms.TextBox();
+            this.tbScanLog = new System.Windows.Forms.TextBox();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
             this.iconDown = new DSLR_Digitizer.ScannerIcon();
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
             this.iconUp = new DSLR_Digitizer.ScannerIcon();
             this.iconStop = new DSLR_Digitizer.ScannerIcon();
-            this.logBox = new System.Windows.Forms.GroupBox();
-            this.tbLog = new System.Windows.Forms.TextBox();
             this.navigationGroup.SuspendLayout();
             this.panel1.SuspendLayout();
             this.commPortGroupbox.SuspendLayout();
+            this.logBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconStop)).BeginInit();
-            this.logBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // navigationGroup
@@ -118,6 +119,40 @@
             this.lblComPort.Size = new System.Drawing.Size(52, 13);
             this.lblComPort.TabIndex = 0;
             this.lblComPort.Text = "COM port";
+            // 
+            // logBox
+            // 
+            this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.logBox.Controls.Add(this.tbScanLog);
+            this.logBox.Controls.Add(this.tbMessageLog);
+            this.logBox.Location = new System.Drawing.Point(12, 426);
+            this.logBox.Name = "logBox";
+            this.logBox.Size = new System.Drawing.Size(776, 324);
+            this.logBox.TabIndex = 4;
+            this.logBox.TabStop = false;
+            this.logBox.Text = "Log";
+            // 
+            // tbMessageLog
+            // 
+            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
+            this.tbMessageLog.Multiline = true;
+            this.tbMessageLog.Name = "tbMessageLog";
+            this.tbMessageLog.ReadOnly = true;
+            this.tbMessageLog.Size = new System.Drawing.Size(645, 305);
+            this.tbMessageLog.TabIndex = 0;
+            // 
+            // tbScanLog
+            // 
+            this.tbScanLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbScanLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbScanLog.Location = new System.Drawing.Point(648, 16);
+            this.tbScanLog.Multiline = true;
+            this.tbScanLog.Name = "tbScanLog";
+            this.tbScanLog.ReadOnly = true;
+            this.tbScanLog.Size = new System.Drawing.Size(125, 305);
+            this.tbScanLog.TabIndex = 1;
             // 
             // iconRight
             // 
@@ -189,28 +224,6 @@
             this.iconStop.TabIndex = 1;
             this.iconStop.TabStop = false;
             // 
-            // logBox
-            // 
-            this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.logBox.Controls.Add(this.tbLog);
-            this.logBox.Location = new System.Drawing.Point(12, 426);
-            this.logBox.Name = "logBox";
-            this.logBox.Size = new System.Drawing.Size(776, 324);
-            this.logBox.TabIndex = 4;
-            this.logBox.TabStop = false;
-            this.logBox.Text = "Log";
-            // 
-            // tbLog
-            // 
-            this.tbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbLog.Location = new System.Drawing.Point(3, 16);
-            this.tbLog.Multiline = true;
-            this.tbLog.Name = "tbLog";
-            this.tbLog.ReadOnly = true;
-            this.tbLog.Size = new System.Drawing.Size(770, 305);
-            this.tbLog.TabIndex = 0;
-            // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,13 +238,13 @@
             this.panel1.ResumeLayout(false);
             this.commPortGroupbox.ResumeLayout(false);
             this.commPortGroupbox.PerformLayout();
+            this.logBox.ResumeLayout(false);
+            this.logBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
-            this.logBox.ResumeLayout(false);
-            this.logBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -250,7 +263,8 @@
         private System.Windows.Forms.Label lblComPort;
         private System.Windows.Forms.Button btnRefreshCommPortList;
         private System.Windows.Forms.GroupBox logBox;
-        private System.Windows.Forms.TextBox tbLog;
+        private System.Windows.Forms.TextBox tbMessageLog;
+        private System.Windows.Forms.TextBox tbScanLog;
     }
 }
 

@@ -8,7 +8,8 @@ namespace ScannerDriver
 {
     public static class RawComms
     {
-        public static event EventHandler<string> OnLogScanner;
+        public static event EventHandler<string> OnLogScannerOutput;
+        public static event EventHandler<string> OnLogScannerCommand;
         public static event EventHandler<string> OnLogMessage;
 
         private static SerialPort port;
@@ -20,7 +21,7 @@ namespace ScannerDriver
         private static readonly char LINE_END_CHAR = (char)10;
         private static readonly string LINE_END_STRING = LINE_END_CHAR.ToString();
 
-        private static readonly object processingLock = new object();
+        private static readonly object __datagramProcessingLock = new object();
 
         enum ScannerState
         {
@@ -54,7 +55,7 @@ namespace ScannerDriver
             }
 
             State = ScannerState.WaitingHello;
-            port.WriteLine("Chello");
+            SendRawDatagram("Chello");
 
             return PortStatus.Ok;
         }
@@ -63,14 +64,15 @@ namespace ScannerDriver
         {
             var incoming = port.ReadExisting();
             Debug.WriteLine("«" + incoming + "»");
-            lock (processingLock)
+            lock (__datagramProcessingLock)
             {
                 PartialDatagram += incoming;
+                ProcessInput();
                 ProcessDatagrams();
             }
         }
 
-        private static void ProcessDatagrams()
+        private static void ProcessInput()
         {
             if (!PartialDatagram.Contains(LINE_END_STRING))
             {
@@ -87,7 +89,47 @@ namespace ScannerDriver
                 PartialDatagram = datagrams[datagrams.Count - 1];
                 datagrams.RemoveAt(datagrams.Count - 1);
             }
+
+            for (int i = 0; i < datagrams.Count; i++)
+            {
+                datagrams[i] = datagrams[i].Trim();
+                if (string.IsNullOrWhiteSpace(datagrams[i]))
+                {
+                    datagrams.RemoveAt(i);
+                    i--;
+                }
+            }
             IncomingDatagrams.AddRange(datagrams);
+        }
+
+        private static void ProcessDatagrams()
+        {
+            foreach (var datagram in IncomingDatagrams)
+            {
+                LogScannerOuput(datagram);
+            }
+            IncomingDatagrams.Clear();
+        }
+
+        public static void SendRawDatagram(string datagram)
+        {
+            if (port == null || !port.IsOpen)
+            {
+                LogMessage("Failed sending datagram «" + datagram + "» because the scanner is not connected.");
+                State = ScannerState.Disconnected;
+                return;
+            }
+
+            try
+            {
+                port.Write(datagram + LINE_END_STRING);
+            }
+            catch (Exception ex)
+            {
+                LogMessage("Failed sending datagram «" + datagram + "»: " + ex.Message);
+                return;
+            }
+            LogScannerCommand(datagram);
         }
 
         private static void LogMessage(string message)
@@ -100,14 +142,24 @@ namespace ScannerDriver
             OnLogMessage(null, message);
         }
 
-        private static void LogScanner(string datagram)
+        private static void LogScannerOuput(string datagram)
         {
-            if (OnLogScanner == null)
+            if (OnLogScannerOutput == null)
             {
                 return;
             }
 
-            OnLogScanner(null, datagram);
+            OnLogScannerOutput(null, datagram);
+        }
+
+        private static void LogScannerCommand(string datagram)
+        {
+            if (OnLogScannerCommand == null)
+            {
+                return;
+            }
+
+            OnLogScannerCommand(null, datagram);
         }
     }
 
