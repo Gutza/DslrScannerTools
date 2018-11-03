@@ -85,6 +85,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\hand-drawn-up-white.png" />
+    <None Include="Resources\hand-drawn-right-white.png" />
+    <None Include="Resources\hand-drawn-left-white.png" />
+    <None Include="Resources\hand-drawn-down-white.png" />
+    <None Include="Resources\hand-drawn-circle-white.png" />
     <None Include="Resources\hand-drawn-up-disabled.png" />
     <None Include="Resources\hand-drawn-right-disabled.png" />
     <None Include="Resources\hand-drawn-left-disabled.png" />

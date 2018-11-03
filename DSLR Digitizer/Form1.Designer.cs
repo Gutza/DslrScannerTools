@@ -60,6 +60,7 @@
             this.iconRight.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_red;
             this.iconRight.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_empty;
             this.iconRight.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_disabled;
+            this.iconRight.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_white;
             this.iconRight.InitialImage = null;
             this.iconRight.Location = new System.Drawing.Point(215, 109);
             this.iconRight.Name = "iconRight";
@@ -73,6 +74,7 @@
             this.iconDown.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_red;
             this.iconDown.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_empty;
             this.iconDown.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_disabled;
+            this.iconDown.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_white;
             this.iconDown.InitialImage = null;
             this.iconDown.Location = new System.Drawing.Point(109, 215);
             this.iconDown.Name = "iconDown";
@@ -86,6 +88,7 @@
             this.iconLeft.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_red;
             this.iconLeft.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_empty;
             this.iconLeft.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_disabled;
+            this.iconLeft.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_white;
             this.iconLeft.InitialImage = null;
             this.iconLeft.Location = new System.Drawing.Point(0, 109);
             this.iconLeft.Name = "iconLeft";
@@ -99,6 +102,7 @@
             this.iconUp.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_red;
             this.iconUp.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_empty;
             this.iconUp.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_disabled;
+            this.iconUp.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_white;
             this.iconUp.InitialImage = null;
             this.iconUp.Location = new System.Drawing.Point(109, 3);
             this.iconUp.Name = "iconUp";
@@ -112,6 +116,7 @@
             this.iconStop.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_green;
             this.iconStop.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_empty;
             this.iconStop.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_disabled;
+            this.iconStop.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_white;
             this.iconStop.InitialImage = null;
             this.iconStop.Location = new System.Drawing.Point(109, 109);
             this.iconStop.Name = "iconStop";

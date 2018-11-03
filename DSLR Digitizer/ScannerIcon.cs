@@ -16,6 +16,9 @@ namespace DSLR_Digitizer
         [Bindable(true)]
         public Image ImageActive { get; set; }
 
+        [Bindable(true)]
+        public Image ImageHover { get; set; }
+
         public enum IconStates
         {
             Disabled,
@@ -23,13 +26,17 @@ namespace DSLR_Digitizer
             Active,
         }
 
+        private PictureBox HoverPicture;
+
+        public bool Hovering { get { return HoverPicture.Visible; } set { HoverPicture.Visible = value; } }
+
         private IconStates _iconState;
 
         public IconStates IconState { get { return _iconState; } set { SetState(value); } }
 
         private void SetState(IconStates value)
         {
-            switch(value)
+            switch (value)
             {
                 case IconStates.Active:
                     Activate();
@@ -61,6 +68,21 @@ namespace DSLR_Digitizer
         {
             _iconState = IconStates.Default;
             Image = ImageDefault;
+        }
+
+        public void Initialize()
+        {
+            HoverPicture = new PictureBox()
+            {
+                Image = ImageHover,
+                Left = this.Left,
+                Top = this.Top,
+                Width = this.Width,
+                Height = this.Height,
+            };
+            this.Parent.Controls.Add(HoverPicture);
+
+            
         }
     }
 
