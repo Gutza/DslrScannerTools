@@ -90,6 +90,12 @@ namespace DSLR_Digitizer
 
             this.MouseEnter += MouseHoverOn;
             HoverPicture.MouseLeave += MouseHoverOff;
+            HoverPicture.Click += OnHoverClick;
+        }
+
+        private void OnHoverClick(object sender, EventArgs e)
+        {
+            OnClick(e);
         }
 
         private void MouseHoverOff(object sender, EventArgs e)

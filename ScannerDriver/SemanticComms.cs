@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ScannerDriver
 {
     public class MoveState
     {
-        public enum MoveStates {
+        public enum MoveStates
+        {
             Stopped,
             MovingPositive,
             MovingNegative,
@@ -16,6 +13,11 @@ namespace ScannerDriver
 
         public MoveStates MoveDirectionX;
         public MoveStates MoveDirectionY;
+
+        public bool IsStopped()
+        {
+            return MoveDirectionX == MoveStates.Stopped && MoveDirectionY == MoveStates.Stopped;
+        }
     }
 
     public static class SemanticComms
@@ -34,12 +36,7 @@ namespace ScannerDriver
 
         private static void ProcessRawScannerCommand(object sender, string command)
         {
-            if (OnRawScannerCommand == null)
-            {
-                return;
-            }
-
-            OnRawScannerCommand(null, command);
+            OnRawScannerCommand?.Invoke(null, command);
         }
 
         private static void ProcessRawLogMessage(object sender, string message)
@@ -65,6 +62,19 @@ namespace ScannerDriver
                 case 'E':
                     LogMessage("The scanner couldn't understand the last command!");
                     break;
+                case 'D':
+                    // Debug message, don't interpret it
+                    break;
+                case 'I':
+                    if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
+                    {
+                        LogMessage("The scanner started.");
+                    }
+                    else
+                    {
+                        LogMessage("Unknown information datagram: " + datagram);
+                    }
+                    break;
                 default:
                     LogMessage("Failed interpreting the scanner's output: «" + datagram + "»");
                     break;
@@ -73,7 +83,7 @@ namespace ScannerDriver
 
         private static void ChangeMoveState(string moveStateDatagram)
         {
-            if (moveStateDatagram.Length!=3)
+            if (moveStateDatagram.Length != 3)
             {
                 LogMessage("The scanner move state datagram is poorly formatted: " + moveStateDatagram);
                 return;
@@ -81,7 +91,7 @@ namespace ScannerDriver
 
             // Duplicated code on purpose -- we'll probably want to tinker with these
             var newMoveState = new MoveState();
-            switch(moveStateDatagram[1])
+            switch (moveStateDatagram[1])
             {
                 case '+':
                     newMoveState.MoveDirectionX = MoveState.MoveStates.MovingPositive;
@@ -112,12 +122,14 @@ namespace ScannerDriver
                     LogMessage("The scanner move state Y could not be interpreted: " + moveStateDatagram);
                     break;
             }
+
+            LogMoveState(newMoveState);
         }
 
         public static PortStatus Connect(string portName)
         {
             var result = RawComms.OpenPort(portName, 115200);
-            RawComms.SendRawDatagram("Chello");
+            //RawComms.SendRawDatagram("Chello");
             return result;
         }
 

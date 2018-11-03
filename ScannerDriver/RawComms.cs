@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
+using System.Threading;
 
 namespace ScannerDriver
 {
@@ -11,15 +12,16 @@ namespace ScannerDriver
         Failed,
         InUse,
         OtherError,
+        Timeout,
     }
 
     public static class RawComms
     {
-        public static event EventHandler<string> OnLogScannerOutput;
-        public static event EventHandler<string> OnLogScannerCommand;
-        public static event EventHandler<string> OnLogMessage;
+        internal static event EventHandler<string> OnLogScannerOutput;
+        internal static event EventHandler<string> OnLogScannerCommand;
+        internal static event EventHandler<string> OnLogMessage;
 
-        private static string SerialPort = null;
+        private static string SerialPortName = null;
         private static SerialPort ScannerPort;
 
         private static string PartialDatagram = string.Empty;
@@ -27,11 +29,15 @@ namespace ScannerDriver
         private static readonly string LINE_END_STRING = LINE_END_CHAR.ToString();
 
         private static readonly object __datagramProcessingLock = new object();
+        private static bool ScannerStarted = false;
+
+        public const string ISTARTED_DATAGRAM = "IStarted";
+        private const double TIMEOUT_ISTARTED = 300.0; // seconds
 
         public static PortStatus OpenPort(string portName, int baudRate)
         {
             ClosePort(true);
-            SerialPort = portName;
+            SerialPortName = portName;
             ScannerPort = new SerialPort(portName, baudRate);
             ScannerPort.DataReceived += ScannerDataReceived;
             try
@@ -54,7 +60,25 @@ namespace ScannerDriver
                 return PortStatus.OtherError;
             }
 
-            LogMessage("Successfully opened raw serial port " + SerialPort);
+            ScannerPort.DtrEnable = true;
+            Thread.Sleep(50);
+            ScannerPort.DtrEnable = false;
+
+            DateTime startDate = DateTime.Now;
+            while (!ScannerStarted && (DateTime.Now - startDate).TotalSeconds < TIMEOUT_ISTARTED)
+            {
+                Thread.Sleep(50);
+            }
+
+            if (!ScannerStarted)
+            {
+                LogMessage("Haven't received the IStarted datagram from serial port " + SerialPortName);
+                ScannerPort = null;
+                SerialPortName = null;
+                return PortStatus.Timeout;
+            }
+
+            LogMessage("Successfully opened raw serial port " + SerialPortName);
 
             return PortStatus.Ok;
         }
@@ -71,8 +95,9 @@ namespace ScannerDriver
             }
 
             ScannerPort.Close();
-            LogMessage("Closed serial port " + SerialPort + ".");
-            SerialPort = null;
+            ScannerStarted = false;
+            LogMessage("Closed serial port " + SerialPortName + ".");
+            SerialPortName = null;
         }
 
         private static void ScannerDataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -115,6 +140,10 @@ namespace ScannerDriver
 
             foreach (var datagram in datagrams)
             {
+                if (!ScannerStarted && datagram.Equals(ISTARTED_DATAGRAM))
+                {
+                    ScannerStarted = true;
+                }
                 LogScannerOuput(datagram);
             }
         }

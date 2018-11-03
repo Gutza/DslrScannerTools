@@ -35,8 +35,8 @@
             this.commPortCombo = new System.Windows.Forms.ComboBox();
             this.lblComPort = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.GroupBox();
-            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.tbScanLog = new System.Windows.Forms.TextBox();
+            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
             this.iconDown = new DSLR_Digitizer.ScannerIcon();
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
@@ -133,16 +133,6 @@
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
             // 
-            // tbMessageLog
-            // 
-            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
-            this.tbMessageLog.Multiline = true;
-            this.tbMessageLog.Name = "tbMessageLog";
-            this.tbMessageLog.ReadOnly = true;
-            this.tbMessageLog.Size = new System.Drawing.Size(645, 305);
-            this.tbMessageLog.TabIndex = 0;
-            // 
             // tbScanLog
             // 
             this.tbScanLog.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -151,8 +141,20 @@
             this.tbScanLog.Multiline = true;
             this.tbScanLog.Name = "tbScanLog";
             this.tbScanLog.ReadOnly = true;
+            this.tbScanLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbScanLog.Size = new System.Drawing.Size(125, 305);
             this.tbScanLog.TabIndex = 1;
+            // 
+            // tbMessageLog
+            // 
+            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
+            this.tbMessageLog.Multiline = true;
+            this.tbMessageLog.Name = "tbMessageLog";
+            this.tbMessageLog.ReadOnly = true;
+            this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbMessageLog.Size = new System.Drawing.Size(645, 305);
+            this.tbMessageLog.TabIndex = 0;
             // 
             // iconRight
             // 
@@ -167,6 +169,7 @@
             this.iconRight.Size = new System.Drawing.Size(100, 100);
             this.iconRight.TabIndex = 5;
             this.iconRight.TabStop = false;
+            this.iconRight.Click += new System.EventHandler(this.iconRight_Click);
             // 
             // iconDown
             // 

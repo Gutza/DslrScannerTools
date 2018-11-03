@@ -1,6 +1,7 @@
 ﻿using ScannerDriver;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace DSLR_Digitizer
@@ -27,9 +28,43 @@ namespace DSLR_Digitizer
             }
 
             ResetCommPortList();
-            RawComms.OnLogMessage += RawCommsLogMessage;
-            RawComms.OnLogScannerOutput += RawCommsLogScannerOutput;
-            RawComms.OnLogScannerCommand += RawCommsLogScannerCommand;
+
+            SemanticComms.Initialize();
+            SemanticComms.OnLogMessage += RawCommsLogMessage;
+            SemanticComms.OnRawScannerCommand += RawCommsLogScannerCommand;
+            SemanticComms.OnRawScannerOutput += RawCommsLogScannerOutput;
+            SemanticComms.OnScannerMoveChange += ProcessScannerMoveChange;
+        }
+
+        private void ProcessScannerMoveChange(object sender, MoveState e)
+        {
+            navigationGroup.Invoke(new MethodInvoker(delegate
+            {
+                ResetNavigation();
+                if (e.IsStopped())
+                {
+                    iconStop.IconState = ScannerIcon.IconStates.Active;
+                    return;
+                }
+
+                if (e.MoveDirectionX == MoveState.MoveStates.MovingPositive)
+                {
+                    iconRight.IconState = ScannerIcon.IconStates.Active;
+                }
+                else if (e.MoveDirectionX == MoveState.MoveStates.MovingNegative)
+                {
+                    iconLeft.IconState = ScannerIcon.IconStates.Active;
+                }
+
+                if (e.MoveDirectionY == MoveState.MoveStates.MovingPositive)
+                {
+                    iconUp.IconState = ScannerIcon.IconStates.Active;
+                }
+                else if (e.MoveDirectionY == MoveState.MoveStates.MovingNegative)
+                {
+                    iconDown.IconState = ScannerIcon.IconStates.Active;
+                }
+            }));
         }
 
         private void RawCommsLogScannerOutput(object sender, string datagram)
@@ -47,7 +82,7 @@ namespace DSLR_Digitizer
             LogMessage("Driver: " + message);
         }
 
-        private void ResetNavigation(ScannerIcon.IconStates iconState = ScannerIcon.IconStates.Active)
+        private void ResetNavigation(ScannerIcon.IconStates iconState = ScannerIcon.IconStates.Default)
         {
             foreach (var icon in NavigationIcons)
             {
@@ -88,7 +123,7 @@ namespace DSLR_Digitizer
             }
 
             var selectedPort = commPortCombo.SelectedItem.ToString();
-            if (ComPort!=null && ComPort.Equals(selectedPort))
+            if (ComPort != null && ComPort.Equals(selectedPort))
             {
                 return;
             }
@@ -109,17 +144,22 @@ namespace DSLR_Digitizer
 
         public void LogMessage(string message)
         {
-            tbMessageLog.Text += message + Environment.NewLine;
+            tbMessageLog.Invoke(new MethodInvoker(delegate { tbMessageLog.Text += message + Environment.NewLine; }));
         }
 
         public void LogScannerIn(string datagram)
         {
-            tbScanLog.Invoke(new MethodInvoker(delegate{ tbScanLog.Text += "< " + datagram + Environment.NewLine; }));
+            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.Text += "< " + datagram + Environment.NewLine; }));
         }
 
         public void LogScannerOut(string datagram)
         {
-            tbScanLog.Text += "> " + datagram + Environment.NewLine;
+            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.Text += "> " + datagram + Environment.NewLine; }));
+        }
+
+        private void iconRight_Click(object sender, EventArgs e)
+        {
+            RawComms.SendRawDatagram("M0,1000");
         }
     }
 }
