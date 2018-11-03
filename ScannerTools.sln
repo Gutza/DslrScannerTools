@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hugin Templater", "Hugin Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbExperiment", "UsbExperiment\UsbExperiment.csproj", "{6A495F79-B586-436B-BF09-47ACA782FD2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSLR Digitizer", "DSLR Digitizer\DSLR Digitizer.csproj", "{81B632F8-598F-4B15-84D4-24900731E0EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A495F79-B586-436B-BF09-47ACA782FD2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81B632F8-598F-4B15-84D4-24900731E0EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81B632F8-598F-4B15-84D4-24900731E0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B632F8-598F-4B15-84D4-24900731E0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81B632F8-598F-4B15-84D4-24900731E0EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
