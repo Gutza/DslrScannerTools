@@ -29,80 +29,95 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.iconRight = new DSLR_Digitizer.ScannerIcon();
+            this.iconDown = new DSLR_Digitizer.ScannerIcon();
+            this.iconLeft = new DSLR_Digitizer.ScannerIcon();
+            this.iconUp = new DSLR_Digitizer.ScannerIcon();
+            this.iconStop = new DSLR_Digitizer.ScannerIcon();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.pictureBox5);
-            this.panel1.Controls.Add(this.pictureBox4);
-            this.panel1.Controls.Add(this.pictureBox3);
-            this.panel1.Controls.Add(this.pictureBox2);
-            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.iconRight);
+            this.panel1.Controls.Add(this.iconDown);
+            this.panel1.Controls.Add(this.iconLeft);
+            this.panel1.Controls.Add(this.iconUp);
+            this.panel1.Controls.Add(this.iconStop);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(322, 321);
             this.panel1.TabIndex = 1;
             // 
-            // pictureBox5
+            // iconRight
             // 
-            this.pictureBox5.Image = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_empty;
-            this.pictureBox5.InitialImage = null;
-            this.pictureBox5.Location = new System.Drawing.Point(215, 109);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox5.TabIndex = 5;
-            this.pictureBox5.TabStop = false;
+            this.iconRight.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconRight.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_red;
+            this.iconRight.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_empty;
+            this.iconRight.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_disabled;
+            this.iconRight.InitialImage = null;
+            this.iconRight.Location = new System.Drawing.Point(215, 109);
+            this.iconRight.Name = "iconRight";
+            this.iconRight.Size = new System.Drawing.Size(100, 100);
+            this.iconRight.TabIndex = 5;
+            this.iconRight.TabStop = false;
             // 
-            // pictureBox4
+            // iconDown
             // 
-            this.pictureBox4.Image = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_empty;
-            this.pictureBox4.InitialImage = null;
-            this.pictureBox4.Location = new System.Drawing.Point(109, 215);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox4.TabIndex = 4;
-            this.pictureBox4.TabStop = false;
+            this.iconDown.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconDown.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_red;
+            this.iconDown.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_empty;
+            this.iconDown.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_disabled;
+            this.iconDown.InitialImage = null;
+            this.iconDown.Location = new System.Drawing.Point(109, 215);
+            this.iconDown.Name = "iconDown";
+            this.iconDown.Size = new System.Drawing.Size(100, 100);
+            this.iconDown.TabIndex = 4;
+            this.iconDown.TabStop = false;
             // 
-            // pictureBox3
+            // iconLeft
             // 
-            this.pictureBox3.Image = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_empty;
-            this.pictureBox3.InitialImage = null;
-            this.pictureBox3.Location = new System.Drawing.Point(0, 109);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox3.TabIndex = 3;
-            this.pictureBox3.TabStop = false;
+            this.iconLeft.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconLeft.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_red;
+            this.iconLeft.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_empty;
+            this.iconLeft.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_disabled;
+            this.iconLeft.InitialImage = null;
+            this.iconLeft.Location = new System.Drawing.Point(0, 109);
+            this.iconLeft.Name = "iconLeft";
+            this.iconLeft.Size = new System.Drawing.Size(100, 100);
+            this.iconLeft.TabIndex = 3;
+            this.iconLeft.TabStop = false;
             // 
-            // pictureBox2
+            // iconUp
             // 
-            this.pictureBox2.Image = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_empty;
-            this.pictureBox2.InitialImage = null;
-            this.pictureBox2.Location = new System.Drawing.Point(109, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox2.TabIndex = 2;
-            this.pictureBox2.TabStop = false;
+            this.iconUp.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconUp.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_red;
+            this.iconUp.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_empty;
+            this.iconUp.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_disabled;
+            this.iconUp.InitialImage = null;
+            this.iconUp.Location = new System.Drawing.Point(109, 3);
+            this.iconUp.Name = "iconUp";
+            this.iconUp.Size = new System.Drawing.Size(100, 100);
+            this.iconUp.TabIndex = 2;
+            this.iconUp.TabStop = false;
             // 
-            // pictureBox1
+            // iconStop
             // 
-            this.pictureBox1.Image = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_green;
-            this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(109, 109);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
+            this.iconStop.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconStop.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_green;
+            this.iconStop.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_empty;
+            this.iconStop.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_disabled;
+            this.iconStop.InitialImage = null;
+            this.iconStop.Location = new System.Drawing.Point(109, 109);
+            this.iconStop.Name = "iconStop";
+            this.iconStop.Size = new System.Drawing.Size(100, 100);
+            this.iconStop.TabIndex = 1;
+            this.iconStop.TabStop = false;
             // 
             // Form1
             // 
@@ -113,11 +128,11 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -125,11 +140,11 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private ScannerIcon iconRight;
+        private ScannerIcon iconDown;
+        private ScannerIcon iconLeft;
+        private ScannerIcon iconUp;
+        private ScannerIcon iconStop;
     }
 }
 

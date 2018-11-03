@@ -12,10 +12,28 @@ namespace DSLR_Digitizer
 {
     public partial class Form1 : Form
     {
+        List<ScannerIcon> NavigationIcons;
+
         public Form1()
         {
             InitializeComponent();
-            //pictureBox1.Image = Properties.Resources.hand_drawn_right_red;
+            NavigationIcons = new List<ScannerIcon>()
+            {
+                iconLeft,
+                iconRight,
+                iconUp,
+                iconDown,
+                iconStop,
+            };
+            ResetNavigation(ScannerIcon.IconStates.Disabled);
+        }
+
+        private void ResetNavigation(ScannerIcon.IconStates iconState = ScannerIcon.IconStates.Active)
+        {
+            foreach(var icon in NavigationIcons)
+            {
+                icon.IconState = iconState;
+            }
         }
     }
 }

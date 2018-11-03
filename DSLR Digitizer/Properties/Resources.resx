@@ -118,11 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="hand_drawn_circle_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hand-drawn-circle-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="hand_drawn_circle_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-circle-empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hand_drawn_circle_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-circle-green.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hand_drawn_down_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hand-drawn-down-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hand_drawn_down_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-down-empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -130,17 +136,26 @@
   <data name="hand_drawn_down_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-down-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hand_drawn_left_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hand-drawn-left-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="hand_drawn_left_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-left-empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hand_drawn_left_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-left-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hand_drawn_right_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hand-drawn-right-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="hand_drawn_right_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-right-empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hand_drawn_right_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-right-red.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="hand_drawn_up_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hand-drawn-up-disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="hand_drawn_up_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hand-drawn-up-empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

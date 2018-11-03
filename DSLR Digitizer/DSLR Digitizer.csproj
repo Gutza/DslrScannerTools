@@ -54,6 +54,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScannerIcon.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -82,6 +85,11 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\hand-drawn-up-disabled.png" />
+    <None Include="Resources\hand-drawn-right-disabled.png" />
+    <None Include="Resources\hand-drawn-left-disabled.png" />
+    <None Include="Resources\hand-drawn-down-disabled.png" />
+    <None Include="Resources\hand-drawn-circle-disabled.png" />
     <None Include="Resources\hand-drawn-up-red.png" />
     <None Include="Resources\hand-drawn-up-empty.png" />
     <None Include="Resources\hand-drawn-left-red.png" />

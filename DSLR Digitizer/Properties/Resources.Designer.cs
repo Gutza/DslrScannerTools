@@ -63,6 +63,16 @@ namespace DSLR_Digitizer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hand_drawn_circle_disabled {
+            get {
+                object obj = ResourceManager.GetObject("hand_drawn_circle_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap hand_drawn_circle_empty {
             get {
                 object obj = ResourceManager.GetObject("hand_drawn_circle_empty", resourceCulture);
@@ -76,6 +86,16 @@ namespace DSLR_Digitizer.Properties {
         internal static System.Drawing.Bitmap hand_drawn_circle_green {
             get {
                 object obj = ResourceManager.GetObject("hand_drawn_circle_green", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hand_drawn_down_disabled {
+            get {
+                object obj = ResourceManager.GetObject("hand_drawn_down_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,6 +123,16 @@ namespace DSLR_Digitizer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hand_drawn_left_disabled {
+            get {
+                object obj = ResourceManager.GetObject("hand_drawn_left_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap hand_drawn_left_empty {
             get {
                 object obj = ResourceManager.GetObject("hand_drawn_left_empty", resourceCulture);
@@ -123,6 +153,16 @@ namespace DSLR_Digitizer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hand_drawn_right_disabled {
+            get {
+                object obj = ResourceManager.GetObject("hand_drawn_right_disabled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap hand_drawn_right_empty {
             get {
                 object obj = ResourceManager.GetObject("hand_drawn_right_empty", resourceCulture);
@@ -136,6 +176,16 @@ namespace DSLR_Digitizer.Properties {
         internal static System.Drawing.Bitmap hand_drawn_right_red {
             get {
                 object obj = ResourceManager.GetObject("hand_drawn_right_red", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hand_drawn_up_disabled {
+            get {
+                object obj = ResourceManager.GetObject("hand_drawn_up_disabled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
