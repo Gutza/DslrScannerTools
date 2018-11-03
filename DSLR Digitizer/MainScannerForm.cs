@@ -93,7 +93,7 @@ namespace DSLR_Digitizer
                 return;
             }
 
-            var result = RawComms.SetPort(selectedPort, 115200);
+            var result = SemanticComms.Connect(selectedPort);
             if (result == PortStatus.Ok)
             {
                 navigationGroup.Enabled = true;

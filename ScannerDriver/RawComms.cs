@@ -1,42 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 
 namespace ScannerDriver
 {
+    public enum PortStatus
+    {
+        Ok,
+        Failed,
+        InUse,
+        OtherError,
+    }
+
     public static class RawComms
     {
         public static event EventHandler<string> OnLogScannerOutput;
         public static event EventHandler<string> OnLogScannerCommand;
         public static event EventHandler<string> OnLogMessage;
 
-        private static SerialPort port;
+        private static string SerialPort = null;
+        private static SerialPort ScannerPort;
 
-        private static ScannerState State = ScannerState.Disconnected;
-
-        private static List<string> IncomingDatagrams = new List<string>();
         private static string PartialDatagram = string.Empty;
         private static readonly char LINE_END_CHAR = (char)10;
         private static readonly string LINE_END_STRING = LINE_END_CHAR.ToString();
 
         private static readonly object __datagramProcessingLock = new object();
 
-        enum ScannerState
+        public static PortStatus OpenPort(string portName, int baudRate)
         {
-            Disconnected,
-            Idle,
-            WaitingHello,
-        }
-
-        public static PortStatus SetPort(string portName, int baudRate)
-        {
-            port = new SerialPort(portName, baudRate);
-            port.DataReceived += ScannerDataReceived;
+            ClosePort(true);
+            SerialPort = portName;
+            ScannerPort = new SerialPort(portName, baudRate);
+            ScannerPort.DataReceived += ScannerDataReceived;
             try
             {
-                port.Open();
+                ScannerPort.Open();
             }
             catch (IOException ex)
             {
@@ -54,26 +54,39 @@ namespace ScannerDriver
                 return PortStatus.OtherError;
             }
 
-            State = ScannerState.WaitingHello;
-            SendRawDatagram("Chello");
+            LogMessage("Successfully opened raw serial port " + SerialPort);
 
             return PortStatus.Ok;
         }
 
+        public static void ClosePort(bool failSilently)
+        {
+            if (ScannerPort == null || !ScannerPort.IsOpen)
+            {
+                if (!failSilently)
+                {
+                    LogMessage("Can't close the serial port, it's already closed.");
+                }
+                return;
+            }
+
+            ScannerPort.Close();
+            LogMessage("Closed serial port " + SerialPort + ".");
+            SerialPort = null;
+        }
+
         private static void ScannerDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            var incoming = port.ReadExisting();
-            Debug.WriteLine("«" + incoming + "»");
+            var input = ScannerPort.ReadExisting();
             lock (__datagramProcessingLock)
             {
-                PartialDatagram += incoming;
-                ProcessInput();
-                ProcessDatagrams();
+                ProcessInput(input);
             }
         }
 
-        private static void ProcessInput()
+        private static void ProcessInput(string incoming)
         {
+            PartialDatagram += incoming;
             if (!PartialDatagram.Contains(LINE_END_STRING))
             {
                 return;
@@ -99,30 +112,24 @@ namespace ScannerDriver
                     i--;
                 }
             }
-            IncomingDatagrams.AddRange(datagrams);
-        }
 
-        private static void ProcessDatagrams()
-        {
-            foreach (var datagram in IncomingDatagrams)
+            foreach (var datagram in datagrams)
             {
                 LogScannerOuput(datagram);
             }
-            IncomingDatagrams.Clear();
         }
 
         public static void SendRawDatagram(string datagram)
         {
-            if (port == null || !port.IsOpen)
+            if (ScannerPort == null || !ScannerPort.IsOpen)
             {
                 LogMessage("Failed sending datagram «" + datagram + "» because the scanner is not connected.");
-                State = ScannerState.Disconnected;
                 return;
             }
 
             try
             {
-                port.Write(datagram + LINE_END_STRING);
+                ScannerPort.Write(datagram + LINE_END_STRING);
             }
             catch (Exception ex)
             {
@@ -161,13 +168,5 @@ namespace ScannerDriver
 
             OnLogScannerCommand(null, datagram);
         }
-    }
-
-    public enum PortStatus
-    {
-        Ok,
-        Failed,
-        InUse,
-        OtherError,
     }
 }
