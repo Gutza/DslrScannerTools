@@ -81,6 +81,11 @@ namespace ScannerDriver
             }
         }
 
+        public static bool Move(int x, int y)
+        {
+            return RawComms.SendRawDatagram("M" + x + "," + y);
+        }
+
         private static void ChangeMoveState(string moveStateDatagram)
         {
             if (moveStateDatagram.Length != 3)
@@ -146,6 +151,11 @@ namespace ScannerDriver
         private static void LogMoveState(MoveState moveState)
         {
             OnScannerMoveChange?.Invoke(null, moveState);
+        }
+
+        public static bool Stop()
+        {
+            return RawComms.SendRawDatagram("S");
         }
     }
 }

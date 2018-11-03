@@ -1,7 +1,6 @@
 ﻿using ScannerDriver;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace DSLR_Digitizer
@@ -159,7 +158,27 @@ namespace DSLR_Digitizer
 
         private void iconRight_Click(object sender, EventArgs e)
         {
-            RawComms.SendRawDatagram("M0,1000");
+            SemanticComms.Move(1000, 0);
+        }
+
+        private void iconUp_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(0, 1000);
+        }
+
+        private void iconStop_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Stop();
+        }
+
+        private void iconDown_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(0, -1000);
+        }
+
+        private void iconLeft_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(-1000, 0);
         }
     }
 }

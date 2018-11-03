@@ -148,12 +148,12 @@ namespace ScannerDriver
             }
         }
 
-        public static void SendRawDatagram(string datagram)
+        internal static bool SendRawDatagram(string datagram)
         {
             if (ScannerPort == null || !ScannerPort.IsOpen)
             {
                 LogMessage("Failed sending datagram «" + datagram + "» because the scanner is not connected.");
-                return;
+                return false;
             }
 
             try
@@ -163,9 +163,11 @@ namespace ScannerDriver
             catch (Exception ex)
             {
                 LogMessage("Failed sending datagram «" + datagram + "»: " + ex.Message);
-                return;
+                return false;
             }
+
             LogScannerCommand(datagram);
+            return true;
         }
 
         private static void LogMessage(string message)

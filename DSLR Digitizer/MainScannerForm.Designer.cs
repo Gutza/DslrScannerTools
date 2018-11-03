@@ -184,6 +184,7 @@
             this.iconDown.Size = new System.Drawing.Size(100, 100);
             this.iconDown.TabIndex = 4;
             this.iconDown.TabStop = false;
+            this.iconDown.Click += new System.EventHandler(this.iconDown_Click);
             // 
             // iconLeft
             // 
@@ -198,6 +199,7 @@
             this.iconLeft.Size = new System.Drawing.Size(100, 100);
             this.iconLeft.TabIndex = 3;
             this.iconLeft.TabStop = false;
+            this.iconLeft.Click += new System.EventHandler(this.iconLeft_Click);
             // 
             // iconUp
             // 
@@ -212,6 +214,7 @@
             this.iconUp.Size = new System.Drawing.Size(100, 100);
             this.iconUp.TabIndex = 2;
             this.iconUp.TabStop = false;
+            this.iconUp.Click += new System.EventHandler(this.iconUp_Click);
             // 
             // iconStop
             // 
@@ -226,6 +229,7 @@
             this.iconStop.Size = new System.Drawing.Size(100, 100);
             this.iconStop.TabIndex = 1;
             this.iconStop.TabStop = false;
+            this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
             // 
             // MainScannerForm
             // 
