@@ -11,7 +11,7 @@ namespace UsbExperiment
     class Program
     {
         // Create the serial port with basic settings
-        static SerialPort port = new SerialPort("COM8", 115200, Parity.None, 8, StopBits.One);
+        static SerialPort port = new SerialPort("COM8", 115200);
 
         [STAThread]
         static void Main(string[] args)

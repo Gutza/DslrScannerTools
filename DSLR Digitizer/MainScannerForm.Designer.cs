@@ -1,6 +1,6 @@
 ﻿namespace DSLR_Digitizer
 {
-    partial class Form1
+    partial class MainScannerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,19 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.navigationGroup = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.commPortGroupbox = new System.Windows.Forms.GroupBox();
+            this.btnRefreshCommPortList = new System.Windows.Forms.Button();
+            this.commPortCombo = new System.Windows.Forms.ComboBox();
+            this.lblComPort = new System.Windows.Forms.Label();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
             this.iconDown = new DSLR_Digitizer.ScannerIcon();
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
             this.iconUp = new DSLR_Digitizer.ScannerIcon();
             this.iconStop = new DSLR_Digitizer.ScannerIcon();
+            this.logBox = new System.Windows.Forms.GroupBox();
+            this.tbLog = new System.Windows.Forms.TextBox();
+            this.navigationGroup.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.commPortGroupbox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconStop)).BeginInit();
+            this.logBox.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // navigationGroup
+            // 
+            this.navigationGroup.Controls.Add(this.panel1);
+            this.navigationGroup.Enabled = false;
+            this.navigationGroup.Location = new System.Drawing.Point(12, 77);
+            this.navigationGroup.Name = "navigationGroup";
+            this.navigationGroup.Size = new System.Drawing.Size(332, 343);
+            this.navigationGroup.TabIndex = 2;
+            this.navigationGroup.TabStop = false;
+            this.navigationGroup.Text = "Navigation";
             // 
             // panel1
             // 
@@ -49,10 +70,54 @@
             this.panel1.Controls.Add(this.iconLeft);
             this.panel1.Controls.Add(this.iconUp);
             this.panel1.Controls.Add(this.iconStop);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
+            this.panel1.Location = new System.Drawing.Point(6, 19);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(322, 321);
-            this.panel1.TabIndex = 1;
+            this.panel1.Size = new System.Drawing.Size(318, 316);
+            this.panel1.TabIndex = 2;
+            // 
+            // commPortGroupbox
+            // 
+            this.commPortGroupbox.Controls.Add(this.btnRefreshCommPortList);
+            this.commPortGroupbox.Controls.Add(this.commPortCombo);
+            this.commPortGroupbox.Controls.Add(this.lblComPort);
+            this.commPortGroupbox.Location = new System.Drawing.Point(18, 13);
+            this.commPortGroupbox.Name = "commPortGroupbox";
+            this.commPortGroupbox.Size = new System.Drawing.Size(326, 48);
+            this.commPortGroupbox.TabIndex = 3;
+            this.commPortGroupbox.TabStop = false;
+            this.commPortGroupbox.Text = "COM port selector";
+            // 
+            // btnRefreshCommPortList
+            // 
+            this.btnRefreshCommPortList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefreshCommPortList.Location = new System.Drawing.Point(245, 16);
+            this.btnRefreshCommPortList.Name = "btnRefreshCommPortList";
+            this.btnRefreshCommPortList.Size = new System.Drawing.Size(75, 23);
+            this.btnRefreshCommPortList.TabIndex = 2;
+            this.btnRefreshCommPortList.Text = "Refresh";
+            this.btnRefreshCommPortList.UseVisualStyleBackColor = true;
+            this.btnRefreshCommPortList.Click += new System.EventHandler(this.btnRefreshCommPortList_Click);
+            // 
+            // commPortCombo
+            // 
+            this.commPortCombo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commPortCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.commPortCombo.FormattingEnabled = true;
+            this.commPortCombo.Location = new System.Drawing.Point(64, 16);
+            this.commPortCombo.Name = "commPortCombo";
+            this.commPortCombo.Size = new System.Drawing.Size(175, 21);
+            this.commPortCombo.TabIndex = 1;
+            this.commPortCombo.SelectedIndexChanged += new System.EventHandler(this.commPortCombo_SelectedIndexChanged);
+            // 
+            // lblComPort
+            // 
+            this.lblComPort.AutoSize = true;
+            this.lblComPort.Location = new System.Drawing.Point(6, 19);
+            this.lblComPort.Name = "lblComPort";
+            this.lblComPort.Size = new System.Drawing.Size(52, 13);
+            this.lblComPort.TabIndex = 0;
+            this.lblComPort.Text = "COM port";
             // 
             // iconRight
             // 
@@ -124,32 +189,68 @@
             this.iconStop.TabIndex = 1;
             this.iconStop.TabStop = false;
             // 
-            // Form1
+            // logBox
+            // 
+            this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.logBox.Controls.Add(this.tbLog);
+            this.logBox.Location = new System.Drawing.Point(12, 426);
+            this.logBox.Name = "logBox";
+            this.logBox.Size = new System.Drawing.Size(776, 324);
+            this.logBox.TabIndex = 4;
+            this.logBox.TabStop = false;
+            this.logBox.Text = "Log";
+            // 
+            // tbLog
+            // 
+            this.tbLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbLog.Location = new System.Drawing.Point(3, 16);
+            this.tbLog.Multiline = true;
+            this.tbLog.Name = "tbLog";
+            this.tbLog.ReadOnly = true;
+            this.tbLog.Size = new System.Drawing.Size(770, 305);
+            this.tbLog.TabIndex = 0;
+            // 
+            // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(800, 762);
+            this.Controls.Add(this.logBox);
+            this.Controls.Add(this.commPortGroupbox);
+            this.Controls.Add(this.navigationGroup);
+            this.Name = "MainScannerForm";
+            this.Text = "Das Scannerwerkschtungapp";
+            this.navigationGroup.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.commPortGroupbox.ResumeLayout(false);
+            this.commPortGroupbox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
+            this.logBox.ResumeLayout(false);
+            this.logBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.GroupBox navigationGroup;
         private System.Windows.Forms.Panel panel1;
         private ScannerIcon iconRight;
         private ScannerIcon iconDown;
         private ScannerIcon iconLeft;
         private ScannerIcon iconUp;
         private ScannerIcon iconStop;
+        private System.Windows.Forms.GroupBox commPortGroupbox;
+        private System.Windows.Forms.ComboBox commPortCombo;
+        private System.Windows.Forms.Label lblComPort;
+        private System.Windows.Forms.Button btnRefreshCommPortList;
+        private System.Windows.Forms.GroupBox logBox;
+        private System.Windows.Forms.TextBox tbLog;
     }
 }
 

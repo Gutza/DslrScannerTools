@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -26,9 +27,9 @@ namespace DSLR_Digitizer
             Active,
         }
 
-        private PictureBox HoverPicture;
+        public PictureBox HoverPicture;
 
-        public bool Hovering { get { return HoverPicture.Visible; } set { HoverPicture.Visible = value; } }
+        private bool Hovering { get { return HoverPicture==null ? false : HoverPicture.Visible; } set { HoverPicture.Visible = value; } }
 
         private IconStates _iconState;
 
@@ -72,17 +73,35 @@ namespace DSLR_Digitizer
 
         public void Initialize()
         {
+            SetState(IconState);
+
             HoverPicture = new PictureBox()
             {
                 Image = ImageHover,
-                Left = this.Left,
-                Top = this.Top,
-                Width = this.Width,
-                Height = this.Height,
+                Left = 0,
+                Top = 0,
+                Width=this.Width,
+                Height=this.Height,
+                BackColor = Color.Transparent,
             };
-            this.Parent.Controls.Add(HoverPicture);
+            this.Controls.Add(HoverPicture);
+            this.Controls.SetChildIndex(HoverPicture, 0);
+            Hovering = false;
 
-            
+            this.MouseEnter += MouseHoverOn;
+            HoverPicture.MouseLeave += MouseHoverOff;
+        }
+
+        private void MouseHoverOff(object sender, EventArgs e)
+        {
+            Debug.Write("-");
+            Hovering = false;
+        }
+
+        private void MouseHoverOn(object sender, EventArgs e)
+        {
+            Debug.Write("+");
+            Hovering = true;
         }
     }
 

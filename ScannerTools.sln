@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbExperiment", "UsbExperim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSLR Digitizer", "DSLR Digitizer\DSLR Digitizer.csproj", "{81B632F8-598F-4B15-84D4-24900731E0EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScannerDriver", "ScannerDriver\ScannerDriver.csproj", "{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{81B632F8-598F-4B15-84D4-24900731E0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81B632F8-598F-4B15-84D4-24900731E0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81B632F8-598F-4B15-84D4-24900731E0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
