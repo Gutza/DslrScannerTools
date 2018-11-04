@@ -28,6 +28,10 @@ namespace DSLR_Digitizer
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
         private string GlobalSettingsFilename { get { return Path.Combine(BaseFolder, GLOBAL_SETTINGS_FILENAME); } }
         private string HuginPanoramaFolder { get { return GetPanoramaFolder(); } }
+        private List<Point> MoveQueue = new List<Point>();
+        private bool MoveToOriginRequested = false;
+
+        int SweepStep;
 
         [Flags]
         enum KeyMoveOrders
@@ -66,6 +70,21 @@ namespace DSLR_Digitizer
             SemanticComms.OnRawScannerCommand += RawCommsLogScannerCommand;
             SemanticComms.OnRawScannerOutput += RawCommsLogScannerOutput;
             SemanticComms.OnScannerMoveChange += ProcessScannerMoveChange;
+            SemanticComms.OnPositionChange += ScannerPositionChanged;
+        }
+
+        private void ScannerPositionChanged(object sender, Point e)
+        {
+            tsPosition.Text = e.ToString();
+        }
+
+        // TODO: This is horrible, need to address it more elegantly
+        private void ExecuteMoveToOrigin()
+        {
+            MoveToOriginRequested = false;
+            var currentPos = SemanticComms.GetCurrentPos();
+            SemanticComms.Move(ScannerOrigin.X - currentPos.X + 1000, ScannerOrigin.Y - currentPos.Y - 1000);
+            MoveQueue.Add(new Point(-1000, 1000));
         }
 
         private void ProcessScannerMoveChange(object sender, MoveState e)
@@ -77,7 +96,15 @@ namespace DSLR_Digitizer
                 {
                     SetInterfaceMoving(false);
                     iconStop.IconState = ScannerIcon.IconStates.Active;
-                    HandleKeyOrders(false);
+                    if (MoveToOriginRequested)
+                    {
+                        ExecuteMoveToOrigin();
+                    }
+                    else
+                    {
+                        HandleKeyOrders(false);
+                    }
+                    HandleMovementQueue();
                     return;
                 }
 
@@ -206,7 +233,7 @@ namespace DSLR_Digitizer
 
         private void iconStop_Click(object sender, EventArgs e)
         {
-            SemanticComms.Stop();
+            StopMoving();
         }
 
         private void iconDown_Click(object sender, EventArgs e)
@@ -252,13 +279,19 @@ namespace DSLR_Digitizer
 
         private void btnGoToOrigin_Click(object sender, EventArgs e)
         {
-            SemanticComms.Stop();
+            if (!ScannerIsMoving)
+            {
+                ExecuteMoveToOrigin();
+                return;
+            }
+
+            StopMoving();
+            MoveToOriginRequested = true;
+            return;
         }
 
         private void btnSetNegativeSize_Click(object sender, EventArgs e)
         {
-            //CurrentSweepSettings.SweepSize.X = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().X - SweepAnchor.X)) / CurrentSweepSettings.DslrSize.X);
-            //CurrentSweepSettings.SweepSize.Y = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().Y - SweepAnchor.Y)) / CurrentSweepSettings.DslrSize.Y);
             CurrentSweepSettings.SweepSize.X = Math.Abs(SemanticComms.GetCurrentPos().X - ScannerOrigin.X);
             CurrentSweepSettings.SweepSize.Y = Math.Abs(SemanticComms.GetCurrentPos().Y - ScannerOrigin.Y);
             LogMessage("Negative size set to " + CurrentSweepSettings.SweepSize.X + " by " + CurrentSweepSettings.SweepSize.Y + " steps.");
@@ -459,7 +492,7 @@ namespace DSLR_Digitizer
             {
                 if (allowStop)
                 {
-                    SemanticComms.Stop();
+                    StopMoving();
                 }
                 return;
             }
@@ -493,7 +526,7 @@ namespace DSLR_Digitizer
             if (e.KeyCode == Keys.Escape)
             {
                 CurrentKeyOrders = KeyMoveOrders.Stop;
-                SemanticComms.Stop();
+                StopMoving();
             }
 
             if (e.Modifiers != Keys.Alt)
@@ -566,6 +599,48 @@ namespace DSLR_Digitizer
             {
                 HandleKeyOrders(true);
             }
+        }
+
+        private void StopMoving()
+        {
+            MoveQueue.Clear();
+            SemanticComms.Stop();
+        }
+
+        private void HandleMovementQueue()
+        {
+            if (MoveQueue.Count == 0)
+            {
+                return;
+            }
+
+            SemanticComms.Move(MoveQueue[0].X, MoveQueue[0].Y);
+            MoveQueue.RemoveAt(0);
+        }
+
+        private void btnResetSweep_Click(object sender, EventArgs e)
+        {
+            SweepStep = 0;
+            btnNextSweepStep.Enabled = true;
+        }
+
+        private void btnNextSweepStep_Click(object sender, EventArgs e)
+        {
+            SweepStep++;
+            var sweepSize = CurrentSweepSettings.GetSweepSize();
+            if (SweepStep == sweepSize.X * sweepSize.Y)
+            {
+                btnNextSweepStep.Enabled = false;
+            }
+
+            if (SweepStep % sweepSize.Y != 0)
+            {
+                SemanticComms.Move(0, CurrentSweepSettings.DslrSize.Y);
+                return;
+            }
+
+            SemanticComms.Move(-CurrentSweepSettings.DslrSize.X, -CurrentSweepSettings.DslrSize.Y * (sweepSize.Y - 1) - 1000);
+            MoveQueue.Add(new Point(0, 1000));
         }
     }
 }

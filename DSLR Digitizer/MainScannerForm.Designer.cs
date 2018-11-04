@@ -58,11 +58,15 @@
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.infoToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.openPtoFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tsPosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
             this.iconDown = new DSLR_Digitizer.ScannerIcon();
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
             this.iconUp = new DSLR_Digitizer.ScannerIcon();
             this.iconStop = new DSLR_Digitizer.ScannerIcon();
+            this.btnResetSweep = new System.Windows.Forms.Button();
+            this.btnNextSweepStep = new System.Windows.Forms.Button();
             this.navigationGroup.SuspendLayout();
             this.panel1.SuspendLayout();
             this.commPortGroupbox.SuspendLayout();
@@ -70,6 +74,7 @@
             this.sweepSettingsGroup.SuspendLayout();
             this.shootingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
@@ -153,7 +158,7 @@
             this.logBox.Controls.Add(this.tbMessageLog);
             this.logBox.Location = new System.Drawing.Point(12, 415);
             this.logBox.Name = "logBox";
-            this.logBox.Size = new System.Drawing.Size(785, 359);
+            this.logBox.Size = new System.Drawing.Size(785, 346);
             this.logBox.TabIndex = 4;
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
@@ -167,7 +172,7 @@
             this.tbScanLog.Name = "tbScanLog";
             this.tbScanLog.ReadOnly = true;
             this.tbScanLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbScanLog.Size = new System.Drawing.Size(125, 340);
+            this.tbScanLog.Size = new System.Drawing.Size(125, 327);
             this.tbScanLog.TabIndex = 1;
             // 
             // tbMessageLog
@@ -178,7 +183,7 @@
             this.tbMessageLog.Name = "tbMessageLog";
             this.tbMessageLog.ReadOnly = true;
             this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbMessageLog.Size = new System.Drawing.Size(779, 340);
+            this.tbMessageLog.Size = new System.Drawing.Size(779, 327);
             this.tbMessageLog.TabIndex = 0;
             // 
             // sweepSettingsGroup
@@ -316,6 +321,8 @@
             // 
             this.shootingGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.shootingGroup.Controls.Add(this.btnNextSweepStep);
+            this.shootingGroup.Controls.Add(this.btnResetSweep);
             this.shootingGroup.Controls.Add(this.pbHelpSaveLocation);
             this.shootingGroup.Controls.Add(this.lblShootLocation);
             this.shootingGroup.Controls.Add(this.btnShootLocation);
@@ -375,6 +382,22 @@
             // 
             this.openPtoFileDialog.DefaultExt = "pto";
             this.openPtoFileDialog.Filter = "PTO files|*.pto|All files|*.*";
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsPosition});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 764);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(809, 22);
+            this.statusStrip1.TabIndex = 7;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tsPosition
+            // 
+            this.tsPosition.Name = "tsPosition";
+            this.tsPosition.Size = new System.Drawing.Size(65, 17);
+            this.tsPosition.Text = "(unknown)";
             // 
             // iconRight
             // 
@@ -451,11 +474,32 @@
             this.iconStop.TabStop = false;
             this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
             // 
+            // btnResetSweep
+            // 
+            this.btnResetSweep.Location = new System.Drawing.Point(9, 45);
+            this.btnResetSweep.Name = "btnResetSweep";
+            this.btnResetSweep.Size = new System.Drawing.Size(83, 23);
+            this.btnResetSweep.TabIndex = 4;
+            this.btnResetSweep.Text = "Reset sweep";
+            this.btnResetSweep.UseVisualStyleBackColor = true;
+            this.btnResetSweep.Click += new System.EventHandler(this.btnResetSweep_Click);
+            // 
+            // btnNextSweepStep
+            // 
+            this.btnNextSweepStep.Location = new System.Drawing.Point(98, 45);
+            this.btnNextSweepStep.Name = "btnNextSweepStep";
+            this.btnNextSweepStep.Size = new System.Drawing.Size(23, 23);
+            this.btnNextSweepStep.TabIndex = 5;
+            this.btnNextSweepStep.Text = ">";
+            this.btnNextSweepStep.UseVisualStyleBackColor = true;
+            this.btnNextSweepStep.Click += new System.EventHandler(this.btnNextSweepStep_Click);
+            // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 786);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.shootingGroup);
             this.Controls.Add(this.sweepSettingsGroup);
             this.Controls.Add(this.logBox);
@@ -480,12 +524,15 @@
             this.shootingGroup.ResumeLayout(false);
             this.shootingGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -525,6 +572,10 @@
         private System.Windows.Forms.Label lbHuginTemplate;
         private System.Windows.Forms.OpenFileDialog openPtoFileDialog;
         private System.Windows.Forms.Button btnDeleteSweepSettings;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel tsPosition;
+        private System.Windows.Forms.Button btnResetSweep;
+        private System.Windows.Forms.Button btnNextSweepStep;
     }
 }
 

@@ -28,6 +28,7 @@ namespace ScannerDriver
         public static event EventHandler<string> OnRawScannerOutput;
         public static event EventHandler<string> OnRawScannerCommand;
         public static event EventHandler<string> OnLogMessage;
+        public static event EventHandler<Point> OnPositionChange;
 
         private static Point CurrentPos = new Point()
         {
@@ -88,6 +89,7 @@ namespace ScannerDriver
                     }
                     CurrentPos.X = int.Parse(match.Groups[1].Value);
                     CurrentPos.Y = int.Parse(match.Groups[2].Value);
+                    OnPositionChange?.Invoke(null, CurrentPos);
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
