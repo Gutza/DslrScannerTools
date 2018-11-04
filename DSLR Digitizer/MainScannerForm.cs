@@ -1,6 +1,7 @@
 ﻿using ScannerDriver;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace DSLR_Digitizer
@@ -9,6 +10,11 @@ namespace DSLR_Digitizer
     {
         List<ScannerIcon> NavigationIcons;
         string ComPort = null;
+        Point DslrAnchor = Point.Empty;
+        Point DslrSize = Point.Empty;
+        Point SweepAnchor = Point.Empty;
+        Point SweepSize = Point.Empty;
+        List<SweepSettings> SweepSettingsList = new List<SweepSettings>();
 
         public MainScannerForm()
         {
@@ -42,10 +48,12 @@ namespace DSLR_Digitizer
                 ResetNavigation();
                 if (e.IsStopped())
                 {
+                    SetInterfaceMoving(false);
                     iconStop.IconState = ScannerIcon.IconStates.Active;
                     return;
                 }
 
+                SetInterfaceMoving(true);
                 if (e.MoveDirectionX == MoveState.MoveStates.MovingPositive)
                 {
                     iconRight.IconState = ScannerIcon.IconStates.Active;
@@ -130,12 +138,12 @@ namespace DSLR_Digitizer
             var result = SemanticComms.Connect(selectedPort);
             if (result == PortStatus.Ok)
             {
-                navigationGroup.Enabled = true;
+                SetInterfaceEnabled(true);
                 ResetNavigation(ScannerIcon.IconStates.Default);
             }
             else
             {
-                navigationGroup.Enabled = false;
+                SetInterfaceEnabled(false);
                 ResetNavigation(ScannerIcon.IconStates.Disabled);
             }
             ComPort = selectedPort;
@@ -179,6 +187,104 @@ namespace DSLR_Digitizer
         private void iconLeft_Click(object sender, EventArgs e)
         {
             SemanticComms.Move(-1000, 0);
+        }
+
+        private void btnLearnShotSize_Click(object sender, EventArgs e)
+        {
+            DslrAnchor = SemanticComms.GetCurrentPos();
+            btnSetDslrHeight.Enabled = true;
+            btnSetDslrWH.Enabled = true;
+            btnSetDslrWidth.Enabled = true;
+        }
+
+        private void SetInterfaceEnabled(bool enabled)
+        {
+            navigationGroup.Enabled = enabled;
+            sweepSettingsGroup.Enabled = enabled;
+        }
+
+        private void SetInterfaceMoving(bool moving)
+        {
+            if (!DslrAnchor.Equals(Point.Empty))
+            {
+                btnSetDslrHeight.Enabled = !moving;
+                btnSetDslrWH.Enabled = !moving;
+                btnSetDslrWidth.Enabled = !moving;
+            }
+
+            if (!SweepAnchor.Equals(Point.Empty))
+            {
+                btnSetDslrHeight.Enabled = !moving;
+                btnSetDslrWidth.Enabled = !moving;
+            }
+        }
+
+        private void btnSetDslrWidth_Click(object sender, EventArgs e)
+        {
+            DslrSize.X = Math.Abs(DslrAnchor.X - SemanticComms.GetCurrentPos().X);
+            LogMessage("DSLR width set to " + DslrSize.X + " steps");
+        }
+
+        private void btnSetDslrHeight_Click(object sender, EventArgs e)
+        {
+            DslrSize.Y = Math.Abs(DslrAnchor.Y - SemanticComms.GetCurrentPos().Y);
+            LogMessage("DSLR height set to " + DslrSize.Y + " steps");
+        }
+
+        private void btnSetDslrWH_Click(object sender, EventArgs e)
+        {
+            DslrSize.X = Math.Abs(DslrAnchor.X - SemanticComms.GetCurrentPos().X);
+            DslrSize.Y = Math.Abs(DslrAnchor.Y - SemanticComms.GetCurrentPos().Y);
+            LogMessage("DSLR width set to " + DslrSize.X + " steps, and height set to " + DslrSize.Y + "steps");
+        }
+
+        private void btnSetSweepStart_Click(object sender, EventArgs e)
+        {
+            SweepAnchor = SemanticComms.GetCurrentPos();
+            btnSetDslrHeight.Enabled = true;
+            btnSetDslrWidth.Enabled = true;
+        }
+
+        private void btnSetSweepWidth_Click(object sender, EventArgs e)
+        {
+            SweepSize.X = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().X - SweepAnchor.X)) / DslrSize.X);
+            LogMessage("Horizontal sweep set to " + SweepSize.X + " frames");
+        }
+
+        private void btnSetSweepHeight_Click(object sender, EventArgs e)
+        {
+            SweepSize.Y = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().Y - SweepAnchor.Y)) / DslrSize.Y);
+            LogMessage("Horizontal sweep set to " + SweepSize.X + " frames");
+        }
+
+        private void btnSaveSweepSettings_Click(object sender, EventArgs e)
+        {
+            string name = Microsoft.VisualBasic.Interaction.InputBox("Name your sweep", "Save sweep settings");
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return;
+            }
+
+            var sweep = new SweepSettings()
+            {
+                Name = name,
+                DslrSize = DslrSize,
+                SweepSize = SweepSize,
+            };
+            SweepSettingsList.Add(sweep);
+            SaveSweeps();
+        }
+
+        private void SaveSweeps()
+        {
+            System.Xml.Serialization.XmlSerializer writer =
+            new System.Xml.Serialization.XmlSerializer(typeof(List<SweepSettings>));
+
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//SerializationOverview.xml";
+            System.IO.FileStream file = System.IO.File.Create(path);
+
+            writer.Serialize(file, SweepSettingsList);
+            file.Close();
         }
     }
 }

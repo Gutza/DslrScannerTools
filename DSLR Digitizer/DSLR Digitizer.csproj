@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,6 +58,7 @@
     <Compile Include="ScannerIcon.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SweepSettings.cs" />
     <EmbeddedResource Include="MainScannerForm.resx">
       <DependentUpon>MainScannerForm.cs</DependentUpon>
     </EmbeddedResource>

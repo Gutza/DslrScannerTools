@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -100,13 +99,11 @@ namespace DSLR_Digitizer
 
         private void MouseHoverOff(object sender, EventArgs e)
         {
-            Debug.Write("-");
             Hovering = false;
         }
 
         private void MouseHoverOn(object sender, EventArgs e)
         {
-            Debug.Write("+");
             Hovering = true;
         }
     }

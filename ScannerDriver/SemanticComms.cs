@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace ScannerDriver
 {
@@ -27,11 +29,22 @@ namespace ScannerDriver
         public static event EventHandler<string> OnRawScannerCommand;
         public static event EventHandler<string> OnLogMessage;
 
+        private static Point CurrentPos = new Point()
+        {
+            X = 0,
+            Y = 0,
+        };
+
         public static void Initialize()
         {
             RawComms.OnLogScannerOutput += ProcessScannerOutput;
             RawComms.OnLogMessage += ProcessRawLogMessage;
             RawComms.OnLogScannerCommand += ProcessRawScannerCommand;
+        }
+
+        public static Point GetCurrentPos()
+        {
+            return CurrentPos;
         }
 
         private static void ProcessRawScannerCommand(object sender, string command)
@@ -57,13 +70,24 @@ namespace ScannerDriver
                     LogMessage("Received comment «" + datagram.Substring(1) + "»");
                     break;
                 case 'K':
-                    // All is well
+                    // All is well, don't interpret it
                     break;
                 case 'E':
                     LogMessage("The scanner couldn't understand the last command!");
                     break;
                 case 'D':
                     // Debug message, don't interpret it
+                    break;
+                case 'S':
+                    Regex stopFormat = new Regex(@"^S([\-0-9]+),([\-0-9]+)$");
+                    var match = stopFormat.Match(datagram);
+                    if (!match.Success)
+                    {
+                        LogMessage("Failed parsing the stop datagram: " + datagram);
+                        break;
+                    }
+                    CurrentPos.X += int.Parse(match.Groups[1].Value);
+                    CurrentPos.Y += int.Parse(match.Groups[2].Value);
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
