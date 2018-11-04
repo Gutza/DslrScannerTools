@@ -10,8 +10,12 @@ namespace DSLR_Digitizer
     [Serializable]
     public class SweepSettings
     {
-        public string Name;
         public Point DslrSize;
         public Point SweepSize;
+    }
+
+    [Serializable]
+    public class SweepSettingsCollection: Dictionary<string, SweepSettings>
+    {
     }
 }

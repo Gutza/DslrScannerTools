@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DSLR_Digitizer
@@ -14,7 +15,16 @@ namespace DSLR_Digitizer
         Point DslrSize = Point.Empty;
         Point SweepAnchor = Point.Empty;
         Point SweepSize = Point.Empty;
-        List<SweepSettings> SweepSettingsList = new List<SweepSettings>();
+        SweepSettingsCollection SweepSettingsList;
+        SweepSettings CurrentSweepSettings = null;
+        GlobalSettings Settings;
+        const string LOCAL_APP_FOLDER_NAME = "DSLR Scanner";
+        const string SWEEP_SETTINGS_FILENAME = "SweepSettings.xml";
+        const string GLOBAL_SETTINGS_FILENAME = "GlobalSettings.xml";
+
+        private string BaseFolder { get { return GetBaseFolder(); } }
+        private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
+        private string GlobalSettingsFilename { get { return Path.Combine(BaseFolder, GLOBAL_SETTINGS_FILENAME); } }
 
         public MainScannerForm()
         {
@@ -33,6 +43,7 @@ namespace DSLR_Digitizer
             }
 
             ResetCommPortList();
+            LoadSweepSettings();
 
             SemanticComms.Initialize();
             SemanticComms.OnLogMessage += RawCommsLogMessage;
@@ -140,18 +151,20 @@ namespace DSLR_Digitizer
             {
                 SetInterfaceEnabled(true);
                 ResetNavigation(ScannerIcon.IconStates.Default);
+                Settings.SerialPortName = selectedPort;
             }
             else
             {
                 SetInterfaceEnabled(false);
                 ResetNavigation(ScannerIcon.IconStates.Disabled);
             }
+
             ComPort = selectedPort;
         }
 
         public void LogMessage(string message)
         {
-            tbMessageLog.Invoke(new MethodInvoker(delegate { tbMessageLog.Text += message + Environment.NewLine; }));
+            tbMessageLog.Invoke(new MethodInvoker(delegate { tbMessageLog.Text += message + Environment.NewLine; tbMessageLog.Refresh(); }));
         }
 
         public void LogScannerIn(string datagram)
@@ -259,32 +272,161 @@ namespace DSLR_Digitizer
 
         private void btnSaveSweepSettings_Click(object sender, EventArgs e)
         {
-            string name = Microsoft.VisualBasic.Interaction.InputBox("Name your sweep", "Save sweep settings");
-            if (string.IsNullOrWhiteSpace(name))
+            string name;
+            while (true)
             {
-                return;
+                name = Microsoft.VisualBasic.Interaction.InputBox("Name your sweep", "Save sweep settings");
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    return;
+                }
+
+                if (!SweepSettingsList.ContainsKey(name))
+                {
+                    break;
+                }
+
+                if (DialogResult.OK == MessageBox.Show("Sweep «" + name + "» already exists. Overwrite?", "Overwrite sweep?", MessageBoxButtons.OKCancel))
+                {
+                    break;
+                }
             }
 
             var sweep = new SweepSettings()
             {
-                Name = name,
                 DslrSize = DslrSize,
                 SweepSize = SweepSize,
             };
-            SweepSettingsList.Add(sweep);
-            SaveSweeps();
+            SweepSettingsList[Name] = sweep;
+            SaveSweepSettings();
         }
 
-        private void SaveSweeps()
+        private void SaveSweepSettings()
         {
-            System.Xml.Serialization.XmlSerializer writer =
-            new System.Xml.Serialization.XmlSerializer(typeof(List<SweepSettings>));
+            var writer = new System.Xml.Serialization.XmlSerializer(typeof(SweepSettingsCollection));
 
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//SerializationOverview.xml";
-            System.IO.FileStream file = System.IO.File.Create(path);
+            using (var file = File.Create(SweepSettingsFilename))
+            {
+                writer.Serialize(file, SweepSettingsList);
+            }
+        }
 
-            writer.Serialize(file, SweepSettingsList);
-            file.Close();
+        private string GetBaseFolder()
+        {
+            var baseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), LOCAL_APP_FOLDER_NAME);
+            if (!Directory.Exists(baseFolder))
+            {
+                Directory.CreateDirectory(baseFolder);
+            }
+
+            return baseFolder;
+        }
+
+        private void LoadSweepSettings()
+        {
+            var sweepSettingsFilename = SweepSettingsFilename;
+            if (!File.Exists(sweepSettingsFilename))
+            {
+                return;
+            }
+            var reader = new System.Xml.Serialization.XmlSerializer(typeof(SweepSettingsCollection));
+            using (var file = new StreamReader(sweepSettingsFilename))
+            {
+                SweepSettingsList = reader.Deserialize(file) as SweepSettingsCollection;
+            }
+
+            cbSweepSettings.Items.Clear();
+            foreach (var sweepSettings in SweepSettingsList)
+            {
+                cbSweepSettings.Items.Add(sweepSettings.Key);
+            }
+        }
+
+        private void cbSweepSettings_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbSweepSettings.SelectedItem == null)
+            {
+                return;
+            }
+
+            var sweepName = cbSweepSettings.SelectedItem as string;
+            if (string.IsNullOrEmpty(sweepName))
+            {
+                LogMessage("Failed loading sweep name!");
+                return;
+            }
+
+
+            if (!SweepSettingsList.ContainsKey(sweepName))
+            {
+                LogMessage("Failed finding sweep " + sweepName);
+                return;
+            }
+
+            CurrentSweepSettings = SweepSettingsList[sweepName];
+        }
+
+        private void btnShootLocation_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbShootLocation.Text))
+            {
+                folderBrowserDialog.SelectedPath = tbShootLocation.Text;
+            }
+
+            if (DialogResult.OK != folderBrowserDialog.ShowDialog())
+            {
+                return;
+            }
+
+            tbShootLocation.Text = folderBrowserDialog.SelectedPath;
+        }
+
+        private void MainScannerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveGlobalSettings();
+        }
+
+        private void SaveGlobalSettings()
+        {
+            var writer = new System.Xml.Serialization.XmlSerializer(typeof(GlobalSettings));
+
+            using (var file = File.Create(GlobalSettingsFilename))
+            {
+                writer.Serialize(file, Settings);
+            }
+        }
+
+        private void LoadGlobalSettings()
+        {
+            var globalSettingsFilename = GlobalSettingsFilename;
+            if (!File.Exists(globalSettingsFilename))
+            {
+                Settings = new GlobalSettings();
+                return;
+            }
+
+            var reader = new System.Xml.Serialization.XmlSerializer(typeof(GlobalSettings));
+            using (var file = new StreamReader(globalSettingsFilename))
+            {
+                Settings = reader.Deserialize(file) as GlobalSettings;
+            }
+
+            if (!string.IsNullOrEmpty(Settings.SerialPortName) && commPortCombo.Items.Contains(Settings.SerialPortName))
+            {
+                
+                commPortCombo.SelectedIndex = commPortCombo.Items.IndexOf(Settings.SerialPortName);
+            }
+
+            if (!string.IsNullOrEmpty(Settings.ImageSaveFolder))
+            {
+                tbShootLocation.Text = Settings.ImageSaveFolder;
+            }
+        }
+
+        private void MainScannerForm_Shown(object sender, EventArgs e)
+        {
+            LogMessage("Loading settings, and opening the last scanner port.");
+            LoadGlobalSettings();
         }
     }
 }

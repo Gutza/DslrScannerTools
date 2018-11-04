@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSettings.cs" />
     <Compile Include="MainScannerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +93,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\question mark small.png" />
+    <None Include="Resources\Layout guide.png" />
     <None Include="Resources\hand-drawn-up-white.png" />
     <None Include="Resources\hand-drawn-right-white.png" />
     <None Include="Resources\hand-drawn-left-white.png" />

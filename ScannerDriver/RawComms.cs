@@ -32,7 +32,7 @@ namespace ScannerDriver
         private static bool ScannerStarted = false;
 
         public const string ISTARTED_DATAGRAM = "IStarted";
-        private const double TIMEOUT_ISTARTED = 300.0; // seconds
+        private const double TIMEOUT_ISTARTED = 2; // seconds
 
         public static PortStatus OpenPort(string portName, int baudRate)
         {
@@ -60,6 +60,8 @@ namespace ScannerDriver
                 return PortStatus.OtherError;
             }
 
+            LogMessage("Port opened, waiting for scanner confirmation.");
+
             ScannerPort.DtrEnable = true;
             Thread.Sleep(50);
             ScannerPort.DtrEnable = false;
@@ -73,6 +75,7 @@ namespace ScannerDriver
             if (!ScannerStarted)
             {
                 LogMessage("Haven't received the IStarted datagram from serial port " + SerialPortName);
+                ScannerPort.DataReceived -= ScannerDataReceived;
                 ScannerPort = null;
                 SerialPortName = null;
                 return PortStatus.Timeout;
@@ -103,7 +106,7 @@ namespace ScannerDriver
         private static void ScannerDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var input = ScannerPort.ReadExisting();
-            lock (__datagramProcessingLock)
+            lock (__datagramProcessingLock) // TODO: Not sure this is ever really needed, but better safe than sorry
             {
                 ProcessInput(input);
             }
@@ -128,23 +131,20 @@ namespace ScannerDriver
                 datagrams.RemoveAt(datagrams.Count - 1);
             }
 
-            for (int i = 0; i < datagrams.Count; i++)
-            {
-                datagrams[i] = datagrams[i].Trim();
-                if (string.IsNullOrWhiteSpace(datagrams[i]))
-                {
-                    datagrams.RemoveAt(i);
-                    i--;
-                }
-            }
-
             foreach (var datagram in datagrams)
             {
-                if (!ScannerStarted && datagram.Equals(ISTARTED_DATAGRAM))
+                var clean = datagram.Trim();
+                if (string.IsNullOrEmpty(clean))
+                {
+                    continue;
+                }
+
+                if (!ScannerStarted && clean.Equals(ISTARTED_DATAGRAM))
                 {
                     ScannerStarted = true;
                 }
-                LogScannerOuput(datagram);
+
+                LogScannerOuput(clean);
             }
         }
 

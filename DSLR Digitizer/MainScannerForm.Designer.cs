@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.navigationGroup = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
@@ -43,6 +44,9 @@
             this.tbScanLog = new System.Windows.Forms.TextBox();
             this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.sweepSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.cbSweepSettings = new System.Windows.Forms.ComboBox();
+            this.lblLoadSweep = new System.Windows.Forms.Label();
+            this.btnSaveSweepSettings = new System.Windows.Forms.Button();
             this.btnSetSweepHeight = new System.Windows.Forms.Button();
             this.btnSetSweepWidth = new System.Windows.Forms.Button();
             this.btnSetSweepStart = new System.Windows.Forms.Button();
@@ -50,7 +54,13 @@
             this.btnSetDslrHeight = new System.Windows.Forms.Button();
             this.btnSetDslrWidth = new System.Windows.Forms.Button();
             this.btnSetAnchor = new System.Windows.Forms.Button();
-            this.btnSaveSweepSettings = new System.Windows.Forms.Button();
+            this.shootingGroup = new System.Windows.Forms.GroupBox();
+            this.pbHelpSaveLocation = new System.Windows.Forms.PictureBox();
+            this.lblShootLocation = new System.Windows.Forms.Label();
+            this.btnShootLocation = new System.Windows.Forms.Button();
+            this.tbShootLocation = new System.Windows.Forms.TextBox();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.infoToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.navigationGroup.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
@@ -61,6 +71,8 @@
             this.commPortGroupbox.SuspendLayout();
             this.logBox.SuspendLayout();
             this.sweepSettingsGroup.SuspendLayout();
+            this.shootingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
             this.SuspendLayout();
             // 
             // navigationGroup
@@ -166,9 +178,9 @@
             this.commPortGroupbox.Controls.Add(this.btnRefreshCommPortList);
             this.commPortGroupbox.Controls.Add(this.commPortCombo);
             this.commPortGroupbox.Controls.Add(this.lblComPort);
-            this.commPortGroupbox.Location = new System.Drawing.Point(18, 12);
+            this.commPortGroupbox.Location = new System.Drawing.Point(12, 12);
             this.commPortGroupbox.Name = "commPortGroupbox";
-            this.commPortGroupbox.Size = new System.Drawing.Size(326, 48);
+            this.commPortGroupbox.Size = new System.Drawing.Size(332, 48);
             this.commPortGroupbox.TabIndex = 3;
             this.commPortGroupbox.TabStop = false;
             this.commPortGroupbox.Text = "COM port selector";
@@ -176,7 +188,7 @@
             // btnRefreshCommPortList
             // 
             this.btnRefreshCommPortList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshCommPortList.Location = new System.Drawing.Point(245, 16);
+            this.btnRefreshCommPortList.Location = new System.Drawing.Point(251, 16);
             this.btnRefreshCommPortList.Name = "btnRefreshCommPortList";
             this.btnRefreshCommPortList.Size = new System.Drawing.Size(75, 23);
             this.btnRefreshCommPortList.TabIndex = 2;
@@ -192,7 +204,7 @@
             this.commPortCombo.FormattingEnabled = true;
             this.commPortCombo.Location = new System.Drawing.Point(64, 16);
             this.commPortCombo.Name = "commPortCombo";
-            this.commPortCombo.Size = new System.Drawing.Size(175, 21);
+            this.commPortCombo.Size = new System.Drawing.Size(181, 21);
             this.commPortCombo.TabIndex = 1;
             this.commPortCombo.SelectedIndexChanged += new System.EventHandler(this.commPortCombo_SelectedIndexChanged);
             // 
@@ -246,6 +258,8 @@
             // 
             this.sweepSettingsGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.sweepSettingsGroup.Controls.Add(this.cbSweepSettings);
+            this.sweepSettingsGroup.Controls.Add(this.lblLoadSweep);
             this.sweepSettingsGroup.Controls.Add(this.btnSaveSweepSettings);
             this.sweepSettingsGroup.Controls.Add(this.btnSetSweepHeight);
             this.sweepSettingsGroup.Controls.Add(this.btnSetSweepWidth);
@@ -257,14 +271,43 @@
             this.sweepSettingsGroup.Enabled = false;
             this.sweepSettingsGroup.Location = new System.Drawing.Point(350, 12);
             this.sweepSettingsGroup.Name = "sweepSettingsGroup";
-            this.sweepSettingsGroup.Size = new System.Drawing.Size(447, 238);
+            this.sweepSettingsGroup.Size = new System.Drawing.Size(447, 107);
             this.sweepSettingsGroup.TabIndex = 5;
             this.sweepSettingsGroup.TabStop = false;
             this.sweepSettingsGroup.Text = "Sweep settings";
             // 
+            // cbSweepSettings
+            // 
+            this.cbSweepSettings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSweepSettings.FormattingEnabled = true;
+            this.cbSweepSettings.Location = new System.Drawing.Point(116, 77);
+            this.cbSweepSettings.Name = "cbSweepSettings";
+            this.cbSweepSettings.Size = new System.Drawing.Size(325, 21);
+            this.cbSweepSettings.TabIndex = 9;
+            this.cbSweepSettings.SelectedIndexChanged += new System.EventHandler(this.cbSweepSettings_SelectedIndexChanged);
+            // 
+            // lblLoadSweep
+            // 
+            this.lblLoadSweep.AutoSize = true;
+            this.lblLoadSweep.Location = new System.Drawing.Point(6, 80);
+            this.lblLoadSweep.Name = "lblLoadSweep";
+            this.lblLoadSweep.Size = new System.Drawing.Size(104, 13);
+            this.lblLoadSweep.TabIndex = 8;
+            this.lblLoadSweep.Text = "Load sweep settings";
+            // 
+            // btnSaveSweepSettings
+            // 
+            this.btnSaveSweepSettings.Location = new System.Drawing.Point(341, 48);
+            this.btnSaveSweepSettings.Name = "btnSaveSweepSettings";
+            this.btnSaveSweepSettings.Size = new System.Drawing.Size(100, 23);
+            this.btnSaveSweepSettings.TabIndex = 7;
+            this.btnSaveSweepSettings.Text = "Save sweep";
+            this.btnSaveSweepSettings.UseVisualStyleBackColor = true;
+            this.btnSaveSweepSettings.Click += new System.EventHandler(this.btnSaveSweepSettings_Click);
+            // 
             // btnSetSweepHeight
             // 
-            this.btnSetSweepHeight.Location = new System.Drawing.Point(230, 48);
+            this.btnSetSweepHeight.Location = new System.Drawing.Point(235, 48);
             this.btnSetSweepHeight.Name = "btnSetSweepHeight";
             this.btnSetSweepHeight.Size = new System.Drawing.Size(100, 23);
             this.btnSetSweepHeight.TabIndex = 6;
@@ -274,7 +317,7 @@
             // 
             // btnSetSweepWidth
             // 
-            this.btnSetSweepWidth.Location = new System.Drawing.Point(124, 48);
+            this.btnSetSweepWidth.Location = new System.Drawing.Point(129, 48);
             this.btnSetSweepWidth.Name = "btnSetSweepWidth";
             this.btnSetSweepWidth.Size = new System.Drawing.Size(100, 23);
             this.btnSetSweepWidth.TabIndex = 5;
@@ -286,7 +329,7 @@
             // 
             this.btnSetSweepStart.Location = new System.Drawing.Point(6, 48);
             this.btnSetSweepStart.Name = "btnSetSweepStart";
-            this.btnSetSweepStart.Size = new System.Drawing.Size(112, 23);
+            this.btnSetSweepStart.Size = new System.Drawing.Size(117, 23);
             this.btnSetSweepStart.TabIndex = 4;
             this.btnSetSweepStart.Text = "Set sweep start here";
             this.btnSetSweepStart.UseVisualStyleBackColor = true;
@@ -295,7 +338,7 @@
             // btnSetDslrWH
             // 
             this.btnSetDslrWH.Enabled = false;
-            this.btnSetDslrWH.Location = new System.Drawing.Point(336, 19);
+            this.btnSetDslrWH.Location = new System.Drawing.Point(341, 19);
             this.btnSetDslrWH.Name = "btnSetDslrWH";
             this.btnSetDslrWH.Size = new System.Drawing.Size(100, 23);
             this.btnSetDslrWH.TabIndex = 3;
@@ -306,7 +349,7 @@
             // btnSetDslrHeight
             // 
             this.btnSetDslrHeight.Enabled = false;
-            this.btnSetDslrHeight.Location = new System.Drawing.Point(230, 19);
+            this.btnSetDslrHeight.Location = new System.Drawing.Point(235, 19);
             this.btnSetDslrHeight.Name = "btnSetDslrHeight";
             this.btnSetDslrHeight.Size = new System.Drawing.Size(100, 23);
             this.btnSetDslrHeight.TabIndex = 2;
@@ -317,7 +360,7 @@
             // btnSetDslrWidth
             // 
             this.btnSetDslrWidth.Enabled = false;
-            this.btnSetDslrWidth.Location = new System.Drawing.Point(124, 19);
+            this.btnSetDslrWidth.Location = new System.Drawing.Point(129, 19);
             this.btnSetDslrWidth.Name = "btnSetDslrWidth";
             this.btnSetDslrWidth.Size = new System.Drawing.Size(100, 23);
             this.btnSetDslrWidth.TabIndex = 1;
@@ -329,27 +372,77 @@
             // 
             this.btnSetAnchor.Location = new System.Drawing.Point(6, 19);
             this.btnSetAnchor.Name = "btnSetAnchor";
-            this.btnSetAnchor.Size = new System.Drawing.Size(112, 23);
+            this.btnSetAnchor.Size = new System.Drawing.Size(117, 23);
             this.btnSetAnchor.TabIndex = 0;
             this.btnSetAnchor.Text = "Set anchor here";
             this.btnSetAnchor.UseVisualStyleBackColor = true;
             this.btnSetAnchor.Click += new System.EventHandler(this.btnLearnShotSize_Click);
             // 
-            // btnSaveSweepSettings
+            // shootingGroup
             // 
-            this.btnSaveSweepSettings.Location = new System.Drawing.Point(336, 48);
-            this.btnSaveSweepSettings.Name = "btnSaveSweepSettings";
-            this.btnSaveSweepSettings.Size = new System.Drawing.Size(100, 23);
-            this.btnSaveSweepSettings.TabIndex = 7;
-            this.btnSaveSweepSettings.Text = "Save sweep";
-            this.btnSaveSweepSettings.UseVisualStyleBackColor = true;
-            this.btnSaveSweepSettings.Click += new System.EventHandler(this.btnSaveSweepSettings_Click);
+            this.shootingGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.shootingGroup.Controls.Add(this.pbHelpSaveLocation);
+            this.shootingGroup.Controls.Add(this.lblShootLocation);
+            this.shootingGroup.Controls.Add(this.btnShootLocation);
+            this.shootingGroup.Controls.Add(this.tbShootLocation);
+            this.shootingGroup.Location = new System.Drawing.Point(350, 125);
+            this.shootingGroup.Name = "shootingGroup";
+            this.shootingGroup.Size = new System.Drawing.Size(447, 284);
+            this.shootingGroup.TabIndex = 6;
+            this.shootingGroup.TabStop = false;
+            this.shootingGroup.Text = "Shooting";
+            // 
+            // pbHelpSaveLocation
+            // 
+            this.pbHelpSaveLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbHelpSaveLocation.Image = global::DSLR_Digitizer.Properties.Resources.question_mark_small;
+            this.pbHelpSaveLocation.Location = new System.Drawing.Point(418, 17);
+            this.pbHelpSaveLocation.Name = "pbHelpSaveLocation";
+            this.pbHelpSaveLocation.Size = new System.Drawing.Size(23, 23);
+            this.pbHelpSaveLocation.TabIndex = 3;
+            this.pbHelpSaveLocation.TabStop = false;
+            this.infoToolTip.SetToolTip(this.pbHelpSaveLocation, "Set this to whatever folder you configured in Canon Utility");
+            // 
+            // lblShootLocation
+            // 
+            this.lblShootLocation.AutoSize = true;
+            this.lblShootLocation.Location = new System.Drawing.Point(6, 22);
+            this.lblShootLocation.Name = "lblShootLocation";
+            this.lblShootLocation.Size = new System.Drawing.Size(72, 13);
+            this.lblShootLocation.TabIndex = 2;
+            this.lblShootLocation.Text = "Save location";
+            // 
+            // btnShootLocation
+            // 
+            this.btnShootLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShootLocation.Location = new System.Drawing.Point(385, 17);
+            this.btnShootLocation.Name = "btnShootLocation";
+            this.btnShootLocation.Size = new System.Drawing.Size(27, 23);
+            this.btnShootLocation.TabIndex = 1;
+            this.btnShootLocation.Text = "...";
+            this.btnShootLocation.UseVisualStyleBackColor = true;
+            this.btnShootLocation.Click += new System.EventHandler(this.btnShootLocation_Click);
+            // 
+            // tbShootLocation
+            // 
+            this.tbShootLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbShootLocation.Location = new System.Drawing.Point(84, 19);
+            this.tbShootLocation.Name = "tbShootLocation";
+            this.tbShootLocation.Size = new System.Drawing.Size(295, 20);
+            this.tbShootLocation.TabIndex = 0;
+            // 
+            // infoToolTip
+            // 
+            this.infoToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(809, 786);
+            this.Controls.Add(this.shootingGroup);
             this.Controls.Add(this.sweepSettingsGroup);
             this.Controls.Add(this.logBox);
             this.Controls.Add(this.commPortGroupbox);
@@ -357,6 +450,8 @@
             this.MinimumSize = new System.Drawing.Size(825, 825);
             this.Name = "MainScannerForm";
             this.Text = "Das Scannerwerkschtungapp";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainScannerForm_FormClosing);
+            this.Shown += new System.EventHandler(this.MainScannerForm_Shown);
             this.navigationGroup.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
@@ -369,6 +464,10 @@
             this.logBox.ResumeLayout(false);
             this.logBox.PerformLayout();
             this.sweepSettingsGroup.ResumeLayout(false);
+            this.sweepSettingsGroup.PerformLayout();
+            this.shootingGroup.ResumeLayout(false);
+            this.shootingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -398,6 +497,15 @@
         private System.Windows.Forms.Button btnSetSweepWidth;
         private System.Windows.Forms.Button btnSetSweepStart;
         private System.Windows.Forms.Button btnSaveSweepSettings;
+        private System.Windows.Forms.ComboBox cbSweepSettings;
+        private System.Windows.Forms.Label lblLoadSweep;
+        private System.Windows.Forms.GroupBox shootingGroup;
+        private System.Windows.Forms.Label lblShootLocation;
+        private System.Windows.Forms.Button btnShootLocation;
+        private System.Windows.Forms.TextBox tbShootLocation;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.PictureBox pbHelpSaveLocation;
+        private System.Windows.Forms.ToolTip infoToolTip;
     }
 }
 

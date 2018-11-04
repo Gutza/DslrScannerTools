@@ -1,3 +1,12 @@
+
+NOTE: Additional licenses for images in
+	DSLR Digitizer/Resources/LICENSES.txt
+
+Adaptations are covered under GPL or the more restrictive license,
+as legally applicable for each individual image.
+
+-----------------------------------------------------------------------
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
