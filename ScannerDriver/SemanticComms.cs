@@ -78,16 +78,16 @@ namespace ScannerDriver
                 case 'D':
                     // Debug message, don't interpret it
                     break;
-                case 'S':
-                    Regex stopFormat = new Regex(@"^S([\-0-9]+),([\-0-9]+)$");
+                case 'P':
+                    Regex stopFormat = new Regex(@"^.([\-0-9]+),([\-0-9]+)$");
                     var match = stopFormat.Match(datagram);
                     if (!match.Success)
                     {
                         LogMessage("Failed parsing the stop datagram: " + datagram);
                         break;
                     }
-                    CurrentPos.X += int.Parse(match.Groups[1].Value);
-                    CurrentPos.Y += int.Parse(match.Groups[2].Value);
+                    CurrentPos.X = int.Parse(match.Groups[1].Value);
+                    CurrentPos.Y = int.Parse(match.Groups[2].Value);
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))

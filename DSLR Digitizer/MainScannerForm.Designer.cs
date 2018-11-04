@@ -31,11 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.navigationGroup = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.iconRight = new DSLR_Digitizer.ScannerIcon();
-            this.iconDown = new DSLR_Digitizer.ScannerIcon();
-            this.iconLeft = new DSLR_Digitizer.ScannerIcon();
-            this.iconUp = new DSLR_Digitizer.ScannerIcon();
-            this.iconStop = new DSLR_Digitizer.ScannerIcon();
             this.commPortGroupbox = new System.Windows.Forms.GroupBox();
             this.btnRefreshCommPortList = new System.Windows.Forms.Button();
             this.commPortCombo = new System.Windows.Forms.ComboBox();
@@ -44,16 +39,17 @@
             this.tbScanLog = new System.Windows.Forms.TextBox();
             this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.sweepSettingsGroup = new System.Windows.Forms.GroupBox();
+            this.btnDeleteSweepSettings = new System.Windows.Forms.Button();
+            this.btnHuginTemplate = new System.Windows.Forms.Button();
+            this.tbHuginTemplate = new System.Windows.Forms.TextBox();
+            this.lbHuginTemplate = new System.Windows.Forms.Label();
             this.cbSweepSettings = new System.Windows.Forms.ComboBox();
             this.lblLoadSweep = new System.Windows.Forms.Label();
             this.btnSaveSweepSettings = new System.Windows.Forms.Button();
-            this.btnSetSweepHeight = new System.Windows.Forms.Button();
-            this.btnSetSweepWidth = new System.Windows.Forms.Button();
-            this.btnSetSweepStart = new System.Windows.Forms.Button();
-            this.btnSetDslrWH = new System.Windows.Forms.Button();
-            this.btnSetDslrHeight = new System.Windows.Forms.Button();
-            this.btnSetDslrWidth = new System.Windows.Forms.Button();
-            this.btnSetAnchor = new System.Windows.Forms.Button();
+            this.btnSetNegativeSize = new System.Windows.Forms.Button();
+            this.btnGoToOrigin = new System.Windows.Forms.Button();
+            this.btnSetDslrSize = new System.Windows.Forms.Button();
+            this.btnResetOrigin = new System.Windows.Forms.Button();
             this.shootingGroup = new System.Windows.Forms.GroupBox();
             this.pbHelpSaveLocation = new System.Windows.Forms.PictureBox();
             this.lblShootLocation = new System.Windows.Forms.Label();
@@ -61,18 +57,24 @@
             this.tbShootLocation = new System.Windows.Forms.TextBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.infoToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.openPtoFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.iconRight = new DSLR_Digitizer.ScannerIcon();
+            this.iconDown = new DSLR_Digitizer.ScannerIcon();
+            this.iconLeft = new DSLR_Digitizer.ScannerIcon();
+            this.iconUp = new DSLR_Digitizer.ScannerIcon();
+            this.iconStop = new DSLR_Digitizer.ScannerIcon();
             this.navigationGroup.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).BeginInit();
             this.commPortGroupbox.SuspendLayout();
             this.logBox.SuspendLayout();
             this.sweepSettingsGroup.SuspendLayout();
             this.shootingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).BeginInit();
             this.SuspendLayout();
             // 
             // navigationGroup
@@ -97,81 +99,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(318, 316);
             this.panel1.TabIndex = 2;
-            // 
-            // iconRight
-            // 
-            this.iconRight.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
-            this.iconRight.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_red;
-            this.iconRight.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_empty;
-            this.iconRight.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_disabled;
-            this.iconRight.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_white;
-            this.iconRight.InitialImage = null;
-            this.iconRight.Location = new System.Drawing.Point(215, 109);
-            this.iconRight.Name = "iconRight";
-            this.iconRight.Size = new System.Drawing.Size(100, 100);
-            this.iconRight.TabIndex = 5;
-            this.iconRight.TabStop = false;
-            this.iconRight.Click += new System.EventHandler(this.iconRight_Click);
-            // 
-            // iconDown
-            // 
-            this.iconDown.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
-            this.iconDown.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_red;
-            this.iconDown.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_empty;
-            this.iconDown.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_disabled;
-            this.iconDown.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_white;
-            this.iconDown.InitialImage = null;
-            this.iconDown.Location = new System.Drawing.Point(109, 215);
-            this.iconDown.Name = "iconDown";
-            this.iconDown.Size = new System.Drawing.Size(100, 100);
-            this.iconDown.TabIndex = 4;
-            this.iconDown.TabStop = false;
-            this.iconDown.Click += new System.EventHandler(this.iconDown_Click);
-            // 
-            // iconLeft
-            // 
-            this.iconLeft.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
-            this.iconLeft.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_red;
-            this.iconLeft.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_empty;
-            this.iconLeft.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_disabled;
-            this.iconLeft.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_white;
-            this.iconLeft.InitialImage = null;
-            this.iconLeft.Location = new System.Drawing.Point(0, 109);
-            this.iconLeft.Name = "iconLeft";
-            this.iconLeft.Size = new System.Drawing.Size(100, 100);
-            this.iconLeft.TabIndex = 3;
-            this.iconLeft.TabStop = false;
-            this.iconLeft.Click += new System.EventHandler(this.iconLeft_Click);
-            // 
-            // iconUp
-            // 
-            this.iconUp.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
-            this.iconUp.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_red;
-            this.iconUp.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_empty;
-            this.iconUp.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_disabled;
-            this.iconUp.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_white;
-            this.iconUp.InitialImage = null;
-            this.iconUp.Location = new System.Drawing.Point(109, 3);
-            this.iconUp.Name = "iconUp";
-            this.iconUp.Size = new System.Drawing.Size(100, 100);
-            this.iconUp.TabIndex = 2;
-            this.iconUp.TabStop = false;
-            this.iconUp.Click += new System.EventHandler(this.iconUp_Click);
-            // 
-            // iconStop
-            // 
-            this.iconStop.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
-            this.iconStop.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_green;
-            this.iconStop.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_empty;
-            this.iconStop.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_disabled;
-            this.iconStop.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_white;
-            this.iconStop.InitialImage = null;
-            this.iconStop.Location = new System.Drawing.Point(109, 109);
-            this.iconStop.Name = "iconStop";
-            this.iconStop.Size = new System.Drawing.Size(100, 100);
-            this.iconStop.TabIndex = 1;
-            this.iconStop.TabStop = false;
-            this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
             // 
             // commPortGroupbox
             // 
@@ -258,31 +185,70 @@
             // 
             this.sweepSettingsGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.sweepSettingsGroup.Controls.Add(this.btnDeleteSweepSettings);
+            this.sweepSettingsGroup.Controls.Add(this.btnHuginTemplate);
+            this.sweepSettingsGroup.Controls.Add(this.tbHuginTemplate);
+            this.sweepSettingsGroup.Controls.Add(this.lbHuginTemplate);
             this.sweepSettingsGroup.Controls.Add(this.cbSweepSettings);
             this.sweepSettingsGroup.Controls.Add(this.lblLoadSweep);
             this.sweepSettingsGroup.Controls.Add(this.btnSaveSweepSettings);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetSweepHeight);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetSweepWidth);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetSweepStart);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetDslrWH);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetDslrHeight);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetDslrWidth);
-            this.sweepSettingsGroup.Controls.Add(this.btnSetAnchor);
+            this.sweepSettingsGroup.Controls.Add(this.btnSetNegativeSize);
+            this.sweepSettingsGroup.Controls.Add(this.btnGoToOrigin);
+            this.sweepSettingsGroup.Controls.Add(this.btnSetDslrSize);
+            this.sweepSettingsGroup.Controls.Add(this.btnResetOrigin);
             this.sweepSettingsGroup.Enabled = false;
             this.sweepSettingsGroup.Location = new System.Drawing.Point(350, 12);
             this.sweepSettingsGroup.Name = "sweepSettingsGroup";
-            this.sweepSettingsGroup.Size = new System.Drawing.Size(447, 107);
+            this.sweepSettingsGroup.Size = new System.Drawing.Size(447, 105);
             this.sweepSettingsGroup.TabIndex = 5;
             this.sweepSettingsGroup.TabStop = false;
             this.sweepSettingsGroup.Text = "Sweep settings";
+            // 
+            // btnDeleteSweepSettings
+            // 
+            this.btnDeleteSweepSettings.Location = new System.Drawing.Point(374, 75);
+            this.btnDeleteSweepSettings.Name = "btnDeleteSweepSettings";
+            this.btnDeleteSweepSettings.Size = new System.Drawing.Size(67, 23);
+            this.btnDeleteSweepSettings.TabIndex = 12;
+            this.btnDeleteSweepSettings.Text = "Delete";
+            this.btnDeleteSweepSettings.UseVisualStyleBackColor = true;
+            // 
+            // btnHuginTemplate
+            // 
+            this.btnHuginTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnHuginTemplate.Location = new System.Drawing.Point(414, 48);
+            this.btnHuginTemplate.Name = "btnHuginTemplate";
+            this.btnHuginTemplate.Size = new System.Drawing.Size(27, 23);
+            this.btnHuginTemplate.TabIndex = 4;
+            this.btnHuginTemplate.Text = "...";
+            this.btnHuginTemplate.UseVisualStyleBackColor = true;
+            this.btnHuginTemplate.Click += new System.EventHandler(this.btnHuginTemplate_Click);
+            // 
+            // tbHuginTemplate
+            // 
+            this.tbHuginTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbHuginTemplate.Location = new System.Drawing.Point(140, 50);
+            this.tbHuginTemplate.Name = "tbHuginTemplate";
+            this.tbHuginTemplate.Size = new System.Drawing.Size(268, 20);
+            this.tbHuginTemplate.TabIndex = 11;
+            // 
+            // lbHuginTemplate
+            // 
+            this.lbHuginTemplate.AutoSize = true;
+            this.lbHuginTemplate.Location = new System.Drawing.Point(6, 53);
+            this.lbHuginTemplate.Name = "lbHuginTemplate";
+            this.lbHuginTemplate.Size = new System.Drawing.Size(128, 13);
+            this.lbHuginTemplate.TabIndex = 10;
+            this.lbHuginTemplate.Text = "Hugin panorama template";
             // 
             // cbSweepSettings
             // 
             this.cbSweepSettings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSweepSettings.FormattingEnabled = true;
-            this.cbSweepSettings.Location = new System.Drawing.Point(116, 77);
+            this.cbSweepSettings.Location = new System.Drawing.Point(83, 77);
             this.cbSweepSettings.Name = "cbSweepSettings";
-            this.cbSweepSettings.Size = new System.Drawing.Size(325, 21);
+            this.cbSweepSettings.Size = new System.Drawing.Size(212, 21);
             this.cbSweepSettings.TabIndex = 9;
             this.cbSweepSettings.SelectedIndexChanged += new System.EventHandler(this.cbSweepSettings_SelectedIndexChanged);
             // 
@@ -291,92 +257,60 @@
             this.lblLoadSweep.AutoSize = true;
             this.lblLoadSweep.Location = new System.Drawing.Point(6, 80);
             this.lblLoadSweep.Name = "lblLoadSweep";
-            this.lblLoadSweep.Size = new System.Drawing.Size(104, 13);
+            this.lblLoadSweep.Size = new System.Drawing.Size(72, 13);
             this.lblLoadSweep.TabIndex = 8;
-            this.lblLoadSweep.Text = "Load sweep settings";
+            this.lblLoadSweep.Text = "Sweep preset";
             // 
             // btnSaveSweepSettings
             // 
-            this.btnSaveSweepSettings.Location = new System.Drawing.Point(341, 48);
+            this.btnSaveSweepSettings.Location = new System.Drawing.Point(301, 75);
             this.btnSaveSweepSettings.Name = "btnSaveSweepSettings";
-            this.btnSaveSweepSettings.Size = new System.Drawing.Size(100, 23);
+            this.btnSaveSweepSettings.Size = new System.Drawing.Size(67, 23);
             this.btnSaveSweepSettings.TabIndex = 7;
-            this.btnSaveSweepSettings.Text = "Save sweep";
+            this.btnSaveSweepSettings.Text = "Save";
             this.btnSaveSweepSettings.UseVisualStyleBackColor = true;
             this.btnSaveSweepSettings.Click += new System.EventHandler(this.btnSaveSweepSettings_Click);
             // 
-            // btnSetSweepHeight
+            // btnSetNegativeSize
             // 
-            this.btnSetSweepHeight.Location = new System.Drawing.Point(235, 48);
-            this.btnSetSweepHeight.Name = "btnSetSweepHeight";
-            this.btnSetSweepHeight.Size = new System.Drawing.Size(100, 23);
-            this.btnSetSweepHeight.TabIndex = 6;
-            this.btnSetSweepHeight.Text = "Set sweep height";
-            this.btnSetSweepHeight.UseVisualStyleBackColor = true;
-            this.btnSetSweepHeight.Click += new System.EventHandler(this.btnSetSweepHeight_Click);
+            this.btnSetNegativeSize.Location = new System.Drawing.Point(308, 19);
+            this.btnSetNegativeSize.Name = "btnSetNegativeSize";
+            this.btnSetNegativeSize.Size = new System.Drawing.Size(133, 23);
+            this.btnSetNegativeSize.TabIndex = 5;
+            this.btnSetNegativeSize.Text = "Set negative frame size";
+            this.btnSetNegativeSize.UseVisualStyleBackColor = true;
+            this.btnSetNegativeSize.Click += new System.EventHandler(this.btnSetNegativeSize_Click);
             // 
-            // btnSetSweepWidth
+            // btnGoToOrigin
             // 
-            this.btnSetSweepWidth.Location = new System.Drawing.Point(129, 48);
-            this.btnSetSweepWidth.Name = "btnSetSweepWidth";
-            this.btnSetSweepWidth.Size = new System.Drawing.Size(100, 23);
-            this.btnSetSweepWidth.TabIndex = 5;
-            this.btnSetSweepWidth.Text = "Set sweep width";
-            this.btnSetSweepWidth.UseVisualStyleBackColor = true;
-            this.btnSetSweepWidth.Click += new System.EventHandler(this.btnSetSweepWidth_Click);
+            this.btnGoToOrigin.Location = new System.Drawing.Point(98, 19);
+            this.btnGoToOrigin.Name = "btnGoToOrigin";
+            this.btnGoToOrigin.Size = new System.Drawing.Size(78, 23);
+            this.btnGoToOrigin.TabIndex = 4;
+            this.btnGoToOrigin.Text = "Go to origin";
+            this.btnGoToOrigin.UseVisualStyleBackColor = true;
+            this.btnGoToOrigin.Click += new System.EventHandler(this.btnGoToOrigin_Click);
             // 
-            // btnSetSweepStart
+            // btnSetDslrSize
             // 
-            this.btnSetSweepStart.Location = new System.Drawing.Point(6, 48);
-            this.btnSetSweepStart.Name = "btnSetSweepStart";
-            this.btnSetSweepStart.Size = new System.Drawing.Size(117, 23);
-            this.btnSetSweepStart.TabIndex = 4;
-            this.btnSetSweepStart.Text = "Set sweep start here";
-            this.btnSetSweepStart.UseVisualStyleBackColor = true;
-            this.btnSetSweepStart.Click += new System.EventHandler(this.btnSetSweepStart_Click);
+            this.btnSetDslrSize.Enabled = false;
+            this.btnSetDslrSize.Location = new System.Drawing.Point(182, 19);
+            this.btnSetDslrSize.Name = "btnSetDslrSize";
+            this.btnSetDslrSize.Size = new System.Drawing.Size(120, 23);
+            this.btnSetDslrSize.TabIndex = 3;
+            this.btnSetDslrSize.Text = "Set DSLR frame size";
+            this.btnSetDslrSize.UseVisualStyleBackColor = true;
+            this.btnSetDslrSize.Click += new System.EventHandler(this.btnSetDslrSize_Click);
             // 
-            // btnSetDslrWH
+            // btnResetOrigin
             // 
-            this.btnSetDslrWH.Enabled = false;
-            this.btnSetDslrWH.Location = new System.Drawing.Point(341, 19);
-            this.btnSetDslrWH.Name = "btnSetDslrWH";
-            this.btnSetDslrWH.Size = new System.Drawing.Size(100, 23);
-            this.btnSetDslrWH.TabIndex = 3;
-            this.btnSetDslrWH.Text = "Set DSLR W+H";
-            this.btnSetDslrWH.UseVisualStyleBackColor = true;
-            this.btnSetDslrWH.Click += new System.EventHandler(this.btnSetDslrWH_Click);
-            // 
-            // btnSetDslrHeight
-            // 
-            this.btnSetDslrHeight.Enabled = false;
-            this.btnSetDslrHeight.Location = new System.Drawing.Point(235, 19);
-            this.btnSetDslrHeight.Name = "btnSetDslrHeight";
-            this.btnSetDslrHeight.Size = new System.Drawing.Size(100, 23);
-            this.btnSetDslrHeight.TabIndex = 2;
-            this.btnSetDslrHeight.Text = "Set DSLR height";
-            this.btnSetDslrHeight.UseVisualStyleBackColor = true;
-            this.btnSetDslrHeight.Click += new System.EventHandler(this.btnSetDslrHeight_Click);
-            // 
-            // btnSetDslrWidth
-            // 
-            this.btnSetDslrWidth.Enabled = false;
-            this.btnSetDslrWidth.Location = new System.Drawing.Point(129, 19);
-            this.btnSetDslrWidth.Name = "btnSetDslrWidth";
-            this.btnSetDslrWidth.Size = new System.Drawing.Size(100, 23);
-            this.btnSetDslrWidth.TabIndex = 1;
-            this.btnSetDslrWidth.Text = "Set DSLR width";
-            this.btnSetDslrWidth.UseVisualStyleBackColor = true;
-            this.btnSetDslrWidth.Click += new System.EventHandler(this.btnSetDslrWidth_Click);
-            // 
-            // btnSetAnchor
-            // 
-            this.btnSetAnchor.Location = new System.Drawing.Point(6, 19);
-            this.btnSetAnchor.Name = "btnSetAnchor";
-            this.btnSetAnchor.Size = new System.Drawing.Size(117, 23);
-            this.btnSetAnchor.TabIndex = 0;
-            this.btnSetAnchor.Text = "Set anchor here";
-            this.btnSetAnchor.UseVisualStyleBackColor = true;
-            this.btnSetAnchor.Click += new System.EventHandler(this.btnLearnShotSize_Click);
+            this.btnResetOrigin.Location = new System.Drawing.Point(6, 19);
+            this.btnResetOrigin.Name = "btnResetOrigin";
+            this.btnResetOrigin.Size = new System.Drawing.Size(86, 23);
+            this.btnResetOrigin.TabIndex = 0;
+            this.btnResetOrigin.Text = "Reset origin";
+            this.btnResetOrigin.UseVisualStyleBackColor = true;
+            this.btnResetOrigin.Click += new System.EventHandler(this.btnResetOrigin_Click);
             // 
             // shootingGroup
             // 
@@ -386,9 +320,9 @@
             this.shootingGroup.Controls.Add(this.lblShootLocation);
             this.shootingGroup.Controls.Add(this.btnShootLocation);
             this.shootingGroup.Controls.Add(this.tbShootLocation);
-            this.shootingGroup.Location = new System.Drawing.Point(350, 125);
+            this.shootingGroup.Location = new System.Drawing.Point(350, 123);
             this.shootingGroup.Name = "shootingGroup";
-            this.shootingGroup.Size = new System.Drawing.Size(447, 284);
+            this.shootingGroup.Size = new System.Drawing.Size(447, 286);
             this.shootingGroup.TabIndex = 6;
             this.shootingGroup.TabStop = false;
             this.shootingGroup.Text = "Shooting";
@@ -437,6 +371,86 @@
             // 
             this.infoToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // openPtoFileDialog
+            // 
+            this.openPtoFileDialog.DefaultExt = "pto";
+            this.openPtoFileDialog.Filter = "PTO files|*.pto|All files|*.*";
+            // 
+            // iconRight
+            // 
+            this.iconRight.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconRight.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_red;
+            this.iconRight.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_empty;
+            this.iconRight.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_disabled;
+            this.iconRight.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_right_white;
+            this.iconRight.InitialImage = null;
+            this.iconRight.Location = new System.Drawing.Point(215, 109);
+            this.iconRight.Name = "iconRight";
+            this.iconRight.Size = new System.Drawing.Size(100, 100);
+            this.iconRight.TabIndex = 5;
+            this.iconRight.TabStop = false;
+            this.iconRight.Click += new System.EventHandler(this.iconRight_Click);
+            // 
+            // iconDown
+            // 
+            this.iconDown.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconDown.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_red;
+            this.iconDown.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_empty;
+            this.iconDown.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_disabled;
+            this.iconDown.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_down_white;
+            this.iconDown.InitialImage = null;
+            this.iconDown.Location = new System.Drawing.Point(109, 215);
+            this.iconDown.Name = "iconDown";
+            this.iconDown.Size = new System.Drawing.Size(100, 100);
+            this.iconDown.TabIndex = 4;
+            this.iconDown.TabStop = false;
+            this.iconDown.Click += new System.EventHandler(this.iconDown_Click);
+            // 
+            // iconLeft
+            // 
+            this.iconLeft.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconLeft.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_red;
+            this.iconLeft.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_empty;
+            this.iconLeft.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_disabled;
+            this.iconLeft.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_left_white;
+            this.iconLeft.InitialImage = null;
+            this.iconLeft.Location = new System.Drawing.Point(0, 109);
+            this.iconLeft.Name = "iconLeft";
+            this.iconLeft.Size = new System.Drawing.Size(100, 100);
+            this.iconLeft.TabIndex = 3;
+            this.iconLeft.TabStop = false;
+            this.iconLeft.Click += new System.EventHandler(this.iconLeft_Click);
+            // 
+            // iconUp
+            // 
+            this.iconUp.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconUp.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_red;
+            this.iconUp.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_empty;
+            this.iconUp.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_disabled;
+            this.iconUp.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_up_white;
+            this.iconUp.InitialImage = null;
+            this.iconUp.Location = new System.Drawing.Point(109, 3);
+            this.iconUp.Name = "iconUp";
+            this.iconUp.Size = new System.Drawing.Size(100, 100);
+            this.iconUp.TabIndex = 2;
+            this.iconUp.TabStop = false;
+            this.iconUp.Click += new System.EventHandler(this.iconUp_Click);
+            // 
+            // iconStop
+            // 
+            this.iconStop.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
+            this.iconStop.ImageActive = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_green;
+            this.iconStop.ImageDefault = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_empty;
+            this.iconStop.ImageDisabled = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_disabled;
+            this.iconStop.ImageHover = global::DSLR_Digitizer.Properties.Resources.hand_drawn_circle_white;
+            this.iconStop.InitialImage = null;
+            this.iconStop.Location = new System.Drawing.Point(109, 109);
+            this.iconStop.Name = "iconStop";
+            this.iconStop.Size = new System.Drawing.Size(100, 100);
+            this.iconStop.TabIndex = 1;
+            this.iconStop.TabStop = false;
+            this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
+            // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -447,18 +461,16 @@
             this.Controls.Add(this.logBox);
             this.Controls.Add(this.commPortGroupbox);
             this.Controls.Add(this.navigationGroup);
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(825, 825);
             this.Name = "MainScannerForm";
             this.Text = "Das Scannerwerkschtungapp";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainScannerForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainScannerForm_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainScannerForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainScannerForm_KeyUp);
             this.navigationGroup.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
             this.commPortGroupbox.ResumeLayout(false);
             this.commPortGroupbox.PerformLayout();
             this.logBox.ResumeLayout(false);
@@ -468,6 +480,11 @@
             this.shootingGroup.ResumeLayout(false);
             this.shootingGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconUp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iconStop)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -489,13 +506,10 @@
         private System.Windows.Forms.TextBox tbMessageLog;
         private System.Windows.Forms.TextBox tbScanLog;
         private System.Windows.Forms.GroupBox sweepSettingsGroup;
-        private System.Windows.Forms.Button btnSetAnchor;
-        private System.Windows.Forms.Button btnSetDslrWidth;
-        private System.Windows.Forms.Button btnSetDslrHeight;
-        private System.Windows.Forms.Button btnSetDslrWH;
-        private System.Windows.Forms.Button btnSetSweepHeight;
-        private System.Windows.Forms.Button btnSetSweepWidth;
-        private System.Windows.Forms.Button btnSetSweepStart;
+        private System.Windows.Forms.Button btnResetOrigin;
+        private System.Windows.Forms.Button btnSetDslrSize;
+        private System.Windows.Forms.Button btnSetNegativeSize;
+        private System.Windows.Forms.Button btnGoToOrigin;
         private System.Windows.Forms.Button btnSaveSweepSettings;
         private System.Windows.Forms.ComboBox cbSweepSettings;
         private System.Windows.Forms.Label lblLoadSweep;
@@ -506,6 +520,11 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.PictureBox pbHelpSaveLocation;
         private System.Windows.Forms.ToolTip infoToolTip;
+        private System.Windows.Forms.Button btnHuginTemplate;
+        private System.Windows.Forms.TextBox tbHuginTemplate;
+        private System.Windows.Forms.Label lbHuginTemplate;
+        private System.Windows.Forms.OpenFileDialog openPtoFileDialog;
+        private System.Windows.Forms.Button btnDeleteSweepSettings;
     }
 }
 

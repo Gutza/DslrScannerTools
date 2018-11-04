@@ -22,7 +22,7 @@
  * D -- debug
  * K -- OK, command accepted
  * E -- error, command not parsed correctly
- * S100,300 -- stopped after 100 steps on X and 300 steps on Y
+ * P100,100 -- current X,Y position in steps, relative to the last Arduino reset
  * Cabc -- comment, as a response to Cabc
  * Mxy -- moving at least on one direction.
  *  x and y are actually placeholders for any of the following:
@@ -39,17 +39,14 @@
 
 const String MESSAGE_OK = "K";
 const String MESSAGE_ERROR = "E";
-const String MESSAGE_MOVING = "M";
-const String MESSAGE_STOPPED = "S";
+const String PREFIX_MOVING = "M";
 const String PREFIX_REMARK = "C";
 const String PREFIX_DEBUG = "D";
+const String PREFIX_POSITION = "P";
 
 unsigned long stepDelay = 1200;
 byte currMoveState = 0;
 byte prevMoveState = 255; // Force it to output the state when it starts
-
-long orderedX, orderedY;
-long actualX, actualY;
 
 // Define some steppers and the pins they will use
 Unistep2 stepperY(9, 10, 11, 12, 4096, stepDelay); // pins for IN1, IN2, IN3, IN4, steps per rev, step delay(in micros)
@@ -86,29 +83,20 @@ void loop()
   
   digitalWrite(LED_BUILTIN, currMoveState);
   if (currMoveState != prevMoveState) {
-    Serial.print(PREFIX_DEBUG);
-    Serial.print(stepsToGoX);
-    Serial.print(",");
-    Serial.println(stepsToGoY);
+    PrintPosition();
     PrintMoveState();
-
-    if (!currMoveState) {
-      Serial.print("S");
-      if (actualX == 0 && actualY == 0) {
-        Serial.print(orderedX);
-        Serial.print(",");
-        Serial.print(orderedY);
-      } else {
-        Serial.print(actualX);
-        Serial.print(",");
-        Serial.print(actualY);
-      }
-      Serial.println();
-    }
     prevMoveState = currMoveState;
   }
 
   ExecuteSerialCommands();
+}
+
+void PrintPosition()
+{
+  Serial.print(PREFIX_POSITION);
+  Serial.print(stepperX.currentPosition());
+  Serial.print(",");
+  Serial.println(stepperY.currentPosition());
 }
 
 //const int MAX_X_BACKLASH = +600;
@@ -116,7 +104,7 @@ void loop()
 
 void PrintMoveState()
 {
-  Serial.print(MESSAGE_MOVING);
+  Serial.print(PREFIX_MOVING);
   
   if (currMoveState & 1 << 0) {
     Serial.print("+");
@@ -139,8 +127,6 @@ void PrintMoveState()
 
 void StopMoving()
 {
-  actualX = orderedX - stepperX.stepsToGo();
-  actualY = orderedY - stepperY.stepsToGo();
   stepperX.stop();
   stepperY.stop();
 }
@@ -152,10 +138,9 @@ void MoveRelative(long x, long y)
     return;
   }
 
-  actualX = 0;
-  actualY = 0;
-  orderedX = x;
-  orderedY = y;
+  if (currMoveState) {
+    PrintPosition();
+  }
   
   if (x!=0) {
     stepperX.move(x);
@@ -189,14 +174,6 @@ void ExecuteSerialCommands()
       Serial.println(MESSAGE_OK);
       StopMoving();
       break;
-/*
-    case 'X':
-      Serial.print(MESSAGE_OK);
-      currentScanStep = 0;
-      MoveRelative(-stepX - 4000, -stepY * 4 - 1000);
-      MoveRelative(0, 1000);
-      break;
-*/
 
     case 'C':
       while (true) {

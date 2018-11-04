@@ -1,4 +1,5 @@
-﻿using ScannerDriver;
+﻿using Newtonsoft.Json;
+using ScannerDriver;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,20 +12,35 @@ namespace DSLR_Digitizer
     {
         List<ScannerIcon> NavigationIcons;
         string ComPort = null;
-        Point DslrAnchor = Point.Empty;
-        Point DslrSize = Point.Empty;
-        Point SweepAnchor = Point.Empty;
-        Point SweepSize = Point.Empty;
-        SweepSettingsCollection SweepSettingsList;
-        SweepSettings CurrentSweepSettings = null;
+        Point ScannerOrigin = Point.Empty;
+
+        SweepSettingsCollection SweepSettingsList = new SweepSettingsCollection();
+        SweepSettings CurrentSweepSettings = new SweepSettings();
         GlobalSettings Settings;
         const string LOCAL_APP_FOLDER_NAME = "DSLR Scanner";
-        const string SWEEP_SETTINGS_FILENAME = "SweepSettings.xml";
-        const string GLOBAL_SETTINGS_FILENAME = "GlobalSettings.xml";
+        const string SWEEP_SETTINGS_FILENAME = "SweepSettings.json";
+        const string GLOBAL_SETTINGS_FILENAME = "GlobalSettings.json";
+        const string HUGIN_PANORAMA_FOLDER = "Panorama templates";
+
+        bool ScannerIsMoving = false;
 
         private string BaseFolder { get { return GetBaseFolder(); } }
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
         private string GlobalSettingsFilename { get { return Path.Combine(BaseFolder, GLOBAL_SETTINGS_FILENAME); } }
+        private string HuginPanoramaFolder { get { return GetPanoramaFolder(); } }
+
+        [Flags]
+        enum KeyMoveOrders
+        {
+            Stop = 0,
+            Left = 1,
+            Right = 2,
+            Up = 4,
+            Down = 8,
+        }
+        private KeyMoveOrders CurrentKeyOrders = KeyMoveOrders.Stop;
+        private KeyMoveOrders PreviousKeyOrders = KeyMoveOrders.Stop;
+        private readonly KeyMoveOrders AllKeyOrders = KeyMoveOrders.Left | KeyMoveOrders.Right | KeyMoveOrders.Up | KeyMoveOrders.Down;
 
         public MainScannerForm()
         {
@@ -61,6 +77,7 @@ namespace DSLR_Digitizer
                 {
                     SetInterfaceMoving(false);
                     iconStop.IconState = ScannerIcon.IconStates.Active;
+                    HandleKeyOrders(false);
                     return;
                 }
 
@@ -164,17 +181,17 @@ namespace DSLR_Digitizer
 
         public void LogMessage(string message)
         {
-            tbMessageLog.Invoke(new MethodInvoker(delegate { tbMessageLog.Text += message + Environment.NewLine; tbMessageLog.Refresh(); }));
+            tbMessageLog.Invoke(new MethodInvoker(delegate { tbMessageLog.AppendText(message + Environment.NewLine); tbMessageLog.Refresh(); }));
         }
 
         public void LogScannerIn(string datagram)
         {
-            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.Text += "< " + datagram + Environment.NewLine; }));
+            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.AppendText("< " + datagram + Environment.NewLine); tbScanLog.Refresh(); }));
         }
 
         public void LogScannerOut(string datagram)
         {
-            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.Text += "> " + datagram + Environment.NewLine; }));
+            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.AppendText("> " + datagram + Environment.NewLine); tbScanLog.Refresh(); }));
         }
 
         private void iconRight_Click(object sender, EventArgs e)
@@ -202,12 +219,11 @@ namespace DSLR_Digitizer
             SemanticComms.Move(-1000, 0);
         }
 
-        private void btnLearnShotSize_Click(object sender, EventArgs e)
+        private void btnResetOrigin_Click(object sender, EventArgs e)
         {
-            DslrAnchor = SemanticComms.GetCurrentPos();
-            btnSetDslrHeight.Enabled = true;
-            btnSetDslrWH.Enabled = true;
-            btnSetDslrWidth.Enabled = true;
+            ScannerOrigin = SemanticComms.GetCurrentPos();
+            btnSetDslrSize.Enabled = true;
+            btnSetNegativeSize.Enabled = true;
         }
 
         private void SetInterfaceEnabled(bool enabled)
@@ -218,60 +234,44 @@ namespace DSLR_Digitizer
 
         private void SetInterfaceMoving(bool moving)
         {
-            if (!DslrAnchor.Equals(Point.Empty))
+            ScannerIsMoving = moving;
+            if (!ScannerOrigin.Equals(Point.Empty))
             {
-                btnSetDslrHeight.Enabled = !moving;
-                btnSetDslrWH.Enabled = !moving;
-                btnSetDslrWidth.Enabled = !moving;
-            }
-
-            if (!SweepAnchor.Equals(Point.Empty))
-            {
-                btnSetDslrHeight.Enabled = !moving;
-                btnSetDslrWidth.Enabled = !moving;
+                btnSetDslrSize.Enabled = !moving;
+                btnSetNegativeSize.Enabled = !moving;
+                btnGoToOrigin.Enabled = !moving;
             }
         }
 
-        private void btnSetDslrWidth_Click(object sender, EventArgs e)
+        private void btnSetDslrSize_Click(object sender, EventArgs e)
         {
-            DslrSize.X = Math.Abs(DslrAnchor.X - SemanticComms.GetCurrentPos().X);
-            LogMessage("DSLR width set to " + DslrSize.X + " steps");
+            CurrentSweepSettings.DslrSize.X = Math.Abs(ScannerOrigin.X - SemanticComms.GetCurrentPos().X);
+            CurrentSweepSettings.DslrSize.Y = Math.Abs(ScannerOrigin.Y - SemanticComms.GetCurrentPos().Y);
+            LogMessage("DSLR size set to " + CurrentSweepSettings.DslrSize.X + " by " + CurrentSweepSettings.DslrSize.Y + " steps.");
         }
 
-        private void btnSetDslrHeight_Click(object sender, EventArgs e)
+        private void btnGoToOrigin_Click(object sender, EventArgs e)
         {
-            DslrSize.Y = Math.Abs(DslrAnchor.Y - SemanticComms.GetCurrentPos().Y);
-            LogMessage("DSLR height set to " + DslrSize.Y + " steps");
+            SemanticComms.Stop();
         }
 
-        private void btnSetDslrWH_Click(object sender, EventArgs e)
+        private void btnSetNegativeSize_Click(object sender, EventArgs e)
         {
-            DslrSize.X = Math.Abs(DslrAnchor.X - SemanticComms.GetCurrentPos().X);
-            DslrSize.Y = Math.Abs(DslrAnchor.Y - SemanticComms.GetCurrentPos().Y);
-            LogMessage("DSLR width set to " + DslrSize.X + " steps, and height set to " + DslrSize.Y + "steps");
-        }
-
-        private void btnSetSweepStart_Click(object sender, EventArgs e)
-        {
-            SweepAnchor = SemanticComms.GetCurrentPos();
-            btnSetDslrHeight.Enabled = true;
-            btnSetDslrWidth.Enabled = true;
-        }
-
-        private void btnSetSweepWidth_Click(object sender, EventArgs e)
-        {
-            SweepSize.X = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().X - SweepAnchor.X)) / DslrSize.X);
-            LogMessage("Horizontal sweep set to " + SweepSize.X + " frames");
-        }
-
-        private void btnSetSweepHeight_Click(object sender, EventArgs e)
-        {
-            SweepSize.Y = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().Y - SweepAnchor.Y)) / DslrSize.Y);
-            LogMessage("Horizontal sweep set to " + SweepSize.X + " frames");
+            //CurrentSweepSettings.SweepSize.X = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().X - SweepAnchor.X)) / CurrentSweepSettings.DslrSize.X);
+            //CurrentSweepSettings.SweepSize.Y = (int)Math.Ceiling(((double)Math.Abs(SemanticComms.GetCurrentPos().Y - SweepAnchor.Y)) / CurrentSweepSettings.DslrSize.Y);
+            CurrentSweepSettings.SweepSize.X = Math.Abs(SemanticComms.GetCurrentPos().X - ScannerOrigin.X);
+            CurrentSweepSettings.SweepSize.Y = Math.Abs(SemanticComms.GetCurrentPos().Y - ScannerOrigin.Y);
+            LogMessage("Negative size set to " + CurrentSweepSettings.SweepSize.X + " by " + CurrentSweepSettings.SweepSize.Y + " steps.");
         }
 
         private void btnSaveSweepSettings_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbHuginTemplate.Text) || !File.Exists(tbHuginTemplate.Text))
+            {
+                MessageBox.Show("You must specify the Hugin panorama file before saving the sweep.");
+                return;
+            }
+
             string name;
             while (true)
             {
@@ -279,6 +279,12 @@ namespace DSLR_Digitizer
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     return;
+                }
+
+                if (name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                {
+                    MessageBox.Show("Invalid sweep name; it has to be a valid filename");
+                    continue;
                 }
 
                 if (!SweepSettingsList.ContainsKey(name))
@@ -292,23 +298,23 @@ namespace DSLR_Digitizer
                 }
             }
 
+            var finalFilename = Path.Combine(HuginPanoramaFolder, name + ".pto");
+            File.Copy(tbHuginTemplate.Text, finalFilename, true);
+            tbHuginTemplate.Text = finalFilename;
+
             var sweep = new SweepSettings()
             {
-                DslrSize = DslrSize,
-                SweepSize = SweepSize,
+                DslrSize = CurrentSweepSettings.DslrSize,
+                SweepSize = CurrentSweepSettings.SweepSize,
+                HuginTemplate = finalFilename,
             };
-            SweepSettingsList[Name] = sweep;
+            SweepSettingsList[name] = sweep;
             SaveSweepSettings();
         }
 
         private void SaveSweepSettings()
         {
-            var writer = new System.Xml.Serialization.XmlSerializer(typeof(SweepSettingsCollection));
-
-            using (var file = File.Create(SweepSettingsFilename))
-            {
-                writer.Serialize(file, SweepSettingsList);
-            }
+            File.WriteAllText(SweepSettingsFilename, JsonConvert.SerializeObject(SweepSettingsList));
         }
 
         private string GetBaseFolder()
@@ -322,6 +328,16 @@ namespace DSLR_Digitizer
             return baseFolder;
         }
 
+        private string GetPanoramaFolder()
+        {
+            var folderName = Path.Combine(BaseFolder, HUGIN_PANORAMA_FOLDER);
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
+            return folderName;
+        }
+
         private void LoadSweepSettings()
         {
             var sweepSettingsFilename = SweepSettingsFilename;
@@ -329,11 +345,7 @@ namespace DSLR_Digitizer
             {
                 return;
             }
-            var reader = new System.Xml.Serialization.XmlSerializer(typeof(SweepSettingsCollection));
-            using (var file = new StreamReader(sweepSettingsFilename))
-            {
-                SweepSettingsList = reader.Deserialize(file) as SweepSettingsCollection;
-            }
+            SweepSettingsList = JsonConvert.DeserializeObject<SweepSettingsCollection>(File.ReadAllText(sweepSettingsFilename));
 
             cbSweepSettings.Items.Clear();
             foreach (var sweepSettings in SweepSettingsList)
@@ -364,6 +376,7 @@ namespace DSLR_Digitizer
             }
 
             CurrentSweepSettings = SweepSettingsList[sweepName];
+            tbHuginTemplate.Text = CurrentSweepSettings.HuginTemplate;
         }
 
         private void btnShootLocation_Click(object sender, EventArgs e)
@@ -388,12 +401,8 @@ namespace DSLR_Digitizer
 
         private void SaveGlobalSettings()
         {
-            var writer = new System.Xml.Serialization.XmlSerializer(typeof(GlobalSettings));
-
-            using (var file = File.Create(GlobalSettingsFilename))
-            {
-                writer.Serialize(file, Settings);
-            }
+            Settings.ImageSaveFolder = tbShootLocation.Text;
+            File.WriteAllText(GlobalSettingsFilename, JsonConvert.SerializeObject(Settings));
         }
 
         private void LoadGlobalSettings()
@@ -405,15 +414,11 @@ namespace DSLR_Digitizer
                 return;
             }
 
-            var reader = new System.Xml.Serialization.XmlSerializer(typeof(GlobalSettings));
-            using (var file = new StreamReader(globalSettingsFilename))
-            {
-                Settings = reader.Deserialize(file) as GlobalSettings;
-            }
+            Settings = JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(GlobalSettingsFilename));
 
             if (!string.IsNullOrEmpty(Settings.SerialPortName) && commPortCombo.Items.Contains(Settings.SerialPortName))
             {
-                
+
                 commPortCombo.SelectedIndex = commPortCombo.Items.IndexOf(Settings.SerialPortName);
             }
 
@@ -427,6 +432,140 @@ namespace DSLR_Digitizer
         {
             LogMessage("Loading settings, and opening the last scanner port.");
             LoadGlobalSettings();
+        }
+
+        private void btnHuginTemplate_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbHuginTemplate.Text))
+            {
+                openPtoFileDialog.FileName = tbHuginTemplate.Text;
+            }
+
+            if (DialogResult.OK == openPtoFileDialog.ShowDialog())
+            {
+                tbHuginTemplate.Text = openPtoFileDialog.FileName;
+            }
+        }
+
+        private void HandleKeyOrders(bool allowStop)
+        {
+            if (ScannerIsMoving && CurrentKeyOrders == PreviousKeyOrders)
+            {
+                return;
+            }
+            PreviousKeyOrders = CurrentKeyOrders;
+
+            if (CurrentKeyOrders == KeyMoveOrders.Stop)
+            {
+                if (allowStop)
+                {
+                    SemanticComms.Stop();
+                }
+                return;
+            }
+
+            var x = 0;
+            var y = 0;
+            var oneStep = 1000;
+            if (KeyMoveOrders.Right == (CurrentKeyOrders & KeyMoveOrders.Right))
+            {
+                x = oneStep;
+            }
+            else if (KeyMoveOrders.Left == (CurrentKeyOrders & KeyMoveOrders.Left))
+            {
+                x = -oneStep;
+            }
+
+            if (KeyMoveOrders.Up == (CurrentKeyOrders & KeyMoveOrders.Up))
+            {
+                y = oneStep;
+            }
+            else if (KeyMoveOrders.Down == (CurrentKeyOrders & KeyMoveOrders.Down))
+            {
+                y = -oneStep;
+            }
+
+            SemanticComms.Move(x, y);
+        }
+
+        private void MainScannerForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                CurrentKeyOrders = KeyMoveOrders.Stop;
+                SemanticComms.Stop();
+            }
+
+            if (e.Modifiers != Keys.Alt)
+            {
+                return;
+            }
+
+            bool handled = true;
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    CurrentKeyOrders |= KeyMoveOrders.Left;
+                    break;
+                case Keys.Right:
+                    CurrentKeyOrders |= KeyMoveOrders.Right;
+                    break;
+                case Keys.Up:
+                    CurrentKeyOrders |= KeyMoveOrders.Up;
+                    break;
+                case Keys.Down:
+                    CurrentKeyOrders |= KeyMoveOrders.Down;
+                    break;
+                default:
+                    handled = false;
+                    break;
+            }
+
+            if (e.Handled = handled)
+            {
+                HandleKeyOrders(true);
+            }
+        }
+
+        private void MainScannerForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (CurrentKeyOrders == KeyMoveOrders.Stop)
+            {
+                return;
+            }
+            else if (e.Modifiers != Keys.Alt)
+            {
+                CurrentKeyOrders = KeyMoveOrders.Stop;
+                HandleKeyOrders(true);
+                return;
+            }
+
+            bool handled = true;
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    return;
+                case Keys.Up:
+                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Up);
+                    break;
+                case Keys.Down:
+                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Down);
+                    break;
+                case Keys.Left:
+                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Left);
+                    break;
+                case Keys.Right:
+                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Right);
+                    break;
+                default:
+                    handled = false;
+                    break;
+            }
+
+            if (e.Handled = handled)
+            {
+                HandleKeyOrders(true);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace DSLR_Digitizer
     {
         public Point DslrSize;
         public Point SweepSize;
+        public string HuginTemplate;
     }
 
     [Serializable]
