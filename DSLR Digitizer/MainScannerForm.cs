@@ -23,6 +23,9 @@ namespace DSLR_Digitizer
 
         bool ScannerIsMoving = false;
 
+        const int BACKLASH = 1500;
+        const int ONE_STEP_IN_STEPS = 1000;
+
         private string BaseFolder { get { return GetBaseFolder(); } }
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
         private string GlobalSettingsFilename { get { return Path.Combine(BaseFolder, GLOBAL_SETTINGS_FILENAME); } }
@@ -81,9 +84,8 @@ namespace DSLR_Digitizer
         private void ExecuteMoveToOrigin()
         {
             MoveToOriginRequested = false;
-            var currentPos = SemanticComms.GetCurrentPos();
-            SemanticComms.Move(new Point(1000, -1000));
-            MoveQueue.Add(new Point(-1000, 1000));
+            SemanticComms.Move(new Point(BACKLASH, -BACKLASH) - new Size(SemanticComms.GetCurrentPos()));
+            MoveQueue.Add(new Point(-BACKLASH, BACKLASH));
         }
 
         private void ProcessScannerMoveChange(object sender, MoveState e)
@@ -227,22 +229,22 @@ namespace DSLR_Digitizer
 
         private void iconRight_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(1000, 0));
+            SemanticComms.Move(new Point(ONE_STEP_IN_STEPS, 0));
         }
 
         private void iconUp_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(0, 1000));
+            SemanticComms.Move(new Point(0, ONE_STEP_IN_STEPS));
         }
 
         private void iconDown_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(0, -1000));
+            SemanticComms.Move(new Point(0, -ONE_STEP_IN_STEPS));
         }
 
         private void iconLeft_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(-1000, 0));
+            SemanticComms.Move(new Point(-ONE_STEP_IN_STEPS, 0));
         }
 
         private void btnResetOrigin_Click(object sender, EventArgs e)
@@ -499,23 +501,22 @@ namespace DSLR_Digitizer
 
             var x = 0;
             var y = 0;
-            var oneStep = 1000;
             if (KeyMoveOrders.Right == (CurrentKeyOrders & KeyMoveOrders.Right))
             {
-                x = oneStep;
+                x = ONE_STEP_IN_STEPS;
             }
             else if (KeyMoveOrders.Left == (CurrentKeyOrders & KeyMoveOrders.Left))
             {
-                x = -oneStep;
+                x = -ONE_STEP_IN_STEPS;
             }
 
             if (KeyMoveOrders.Up == (CurrentKeyOrders & KeyMoveOrders.Up))
             {
-                y = oneStep;
+                y = ONE_STEP_IN_STEPS;
             }
             else if (KeyMoveOrders.Down == (CurrentKeyOrders & KeyMoveOrders.Down))
             {
-                y = -oneStep;
+                y = -ONE_STEP_IN_STEPS;
             }
 
             SemanticComms.Move(new Point(x, y));
@@ -640,9 +641,9 @@ namespace DSLR_Digitizer
 
             SemanticComms.Move(new Point(
                 -CurrentSweepSettings.SweepDelta.Width,
-                -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepDelta.Height - 1) - 1000
+                -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepDelta.Height - 1) - BACKLASH
             ));
-            MoveQueue.Add(new Point(0, 1000));
+            MoveQueue.Add(new Point(0, BACKLASH));
         }
     }
 }
