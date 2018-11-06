@@ -43,6 +43,8 @@ const String PREFIX_MOVING = "M";
 const String PREFIX_REMARK = "C";
 const String PREFIX_DEBUG = "D";
 const String PREFIX_POSITION = "P";
+const unsigned long POSITION_DUMP_FREQUENCY_MILLIS = 500;
+unsigned long lastPositionDumpMillis;
 
 unsigned long stepDelay = 1200;
 byte currMoveState = 0;
@@ -88,7 +90,29 @@ void loop()
     prevMoveState = currMoveState;
   }
 
+  if (currMoveState) {
+    HandlePositionDump();
+  } else {
+    lastPositionDumpMillis = 0;
+  }
+
   ExecuteSerialCommands();
+}
+
+void HandlePositionDump()
+{
+  if (lastPositionDumpMillis == 0) {
+    lastPositionDumpMillis = millis();
+    return;
+  }
+
+  long currMillis = millis();
+  if (currMillis - lastPositionDumpMillis < POSITION_DUMP_FREQUENCY_MILLIS) {
+    return;
+  }
+
+  lastPositionDumpMillis = currMillis;
+  PrintPosition();
 }
 
 void PrintPosition()

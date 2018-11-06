@@ -57,6 +57,7 @@ namespace ScannerDriver
         public static void ResetOrigin()
         {
             Origin = RawPos;
+            OnPositionChange?.Invoke(null, new Point(0, 0));
         }
 
         private static void ProcessRawScannerCommand(object sender, string command)
@@ -100,7 +101,7 @@ namespace ScannerDriver
                     }
                     RawPos.X = int.Parse(match.Groups[1].Value);
                     RawPos.Y = int.Parse(match.Groups[2].Value);
-                    OnPositionChange?.Invoke(null, RawPos);
+                    OnPositionChange?.Invoke(null, RawPos - new Size(Origin));
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
