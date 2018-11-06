@@ -30,7 +30,13 @@ namespace ScannerDriver
         public static event EventHandler<string> OnLogMessage;
         public static event EventHandler<Point> OnPositionChange;
 
-        private static Point CurrentPos = new Point()
+        private static Point RawPos = new Point()
+        {
+            X = 0,
+            Y = 0,
+        };
+
+        private static Point Origin = new Point()
         {
             X = 0,
             Y = 0,
@@ -45,7 +51,12 @@ namespace ScannerDriver
 
         public static Point GetCurrentPos()
         {
-            return CurrentPos;
+            return RawPos - new Size(Origin);
+        }
+
+        public static void ResetOrigin()
+        {
+            Origin = RawPos;
         }
 
         private static void ProcessRawScannerCommand(object sender, string command)
@@ -87,9 +98,9 @@ namespace ScannerDriver
                         LogMessage("Failed parsing the stop datagram: " + datagram);
                         break;
                     }
-                    CurrentPos.X = int.Parse(match.Groups[1].Value);
-                    CurrentPos.Y = int.Parse(match.Groups[2].Value);
-                    OnPositionChange?.Invoke(null, CurrentPos);
+                    RawPos.X = int.Parse(match.Groups[1].Value);
+                    RawPos.Y = int.Parse(match.Groups[2].Value);
+                    OnPositionChange?.Invoke(null, RawPos);
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
@@ -107,9 +118,10 @@ namespace ScannerDriver
             }
         }
 
-        public static bool Move(int x, int y)
+        public static bool Move(Point newPos)
         {
-            return RawComms.SendRawDatagram("M" + x + "," + y);
+            var relativePos = newPos - new Size(Origin);
+            return RawComms.SendRawDatagram("M" + newPos.X + "," + newPos.Y);
         }
 
         private static void ChangeMoveState(string moveStateDatagram)

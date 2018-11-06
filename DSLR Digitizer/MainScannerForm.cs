@@ -12,7 +12,6 @@ namespace DSLR_Digitizer
     {
         List<ScannerIcon> NavigationIcons;
         string ComPort = null;
-        Point ScannerOrigin = Point.Empty;
 
         SweepSettingsCollection SweepSettingsList = new SweepSettingsCollection();
         SweepSettings CurrentSweepSettings = new SweepSettings();
@@ -83,7 +82,7 @@ namespace DSLR_Digitizer
         {
             MoveToOriginRequested = false;
             var currentPos = SemanticComms.GetCurrentPos();
-            SemanticComms.Move(ScannerOrigin.X - currentPos.X + 1000, ScannerOrigin.Y - currentPos.Y - 1000);
+            SemanticComms.Move(new Point(1000, -1000));
             MoveQueue.Add(new Point(-1000, 1000));
         }
 
@@ -221,34 +220,34 @@ namespace DSLR_Digitizer
             tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.AppendText("> " + datagram + Environment.NewLine); tbScanLog.Refresh(); }));
         }
 
-        private void iconRight_Click(object sender, EventArgs e)
-        {
-            SemanticComms.Move(1000, 0);
-        }
-
-        private void iconUp_Click(object sender, EventArgs e)
-        {
-            SemanticComms.Move(0, 1000);
-        }
-
         private void iconStop_Click(object sender, EventArgs e)
         {
             StopMoving();
         }
 
+        private void iconRight_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(new Point(1000, 0));
+        }
+
+        private void iconUp_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(new Point(0, 1000));
+        }
+
         private void iconDown_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(0, -1000);
+            SemanticComms.Move(new Point(0, -1000));
         }
 
         private void iconLeft_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(-1000, 0);
+            SemanticComms.Move(new Point(-1000, 0));
         }
 
         private void btnResetOrigin_Click(object sender, EventArgs e)
         {
-            ScannerOrigin = SemanticComms.GetCurrentPos();
+            SemanticComms.ResetOrigin();
             btnSetDslrSize.Enabled = true;
             btnSetNegativeSize.Enabled = true;
         }
@@ -262,19 +261,18 @@ namespace DSLR_Digitizer
         private void SetInterfaceMoving(bool moving)
         {
             ScannerIsMoving = moving;
-            if (!ScannerOrigin.Equals(Point.Empty))
-            {
-                btnSetDslrSize.Enabled = !moving;
-                btnSetNegativeSize.Enabled = !moving;
-                btnGoToOrigin.Enabled = !moving;
-            }
+            btnSetDslrSize.Enabled = !moving;
+            btnSetNegativeSize.Enabled = !moving;
+            btnGoToOrigin.Enabled = !moving;
         }
 
         private void btnSetDslrSize_Click(object sender, EventArgs e)
         {
-            CurrentSweepSettings.DslrSize.X = Math.Abs(ScannerOrigin.X - SemanticComms.GetCurrentPos().X);
-            CurrentSweepSettings.DslrSize.Y = Math.Abs(ScannerOrigin.Y - SemanticComms.GetCurrentPos().Y);
-            LogMessage("DSLR size set to " + CurrentSweepSettings.DslrSize.X + " by " + CurrentSweepSettings.DslrSize.Y + " steps.");
+            CurrentSweepSettings.DslrSize = new Size(
+                Math.Abs(SemanticComms.GetCurrentPos().X),
+                Math.Abs(SemanticComms.GetCurrentPos().Y)
+            );
+            LogMessage("DSLR size set to " + CurrentSweepSettings.DslrSize.Width + " by " + CurrentSweepSettings.DslrSize.Height + " steps.");
         }
 
         private void btnGoToOrigin_Click(object sender, EventArgs e)
@@ -292,9 +290,11 @@ namespace DSLR_Digitizer
 
         private void btnSetNegativeSize_Click(object sender, EventArgs e)
         {
-            CurrentSweepSettings.SweepSize.X = Math.Abs(SemanticComms.GetCurrentPos().X - ScannerOrigin.X);
-            CurrentSweepSettings.SweepSize.Y = Math.Abs(SemanticComms.GetCurrentPos().Y - ScannerOrigin.Y);
-            LogMessage("Negative size set to " + CurrentSweepSettings.SweepSize.X + " by " + CurrentSweepSettings.SweepSize.Y + " steps.");
+            CurrentSweepSettings.FilmSize = new Size(
+                Math.Abs(SemanticComms.GetCurrentPos().X),
+                Math.Abs(SemanticComms.GetCurrentPos().Y)
+            );
+            LogMessage("Negative size set to " + CurrentSweepSettings.FilmSize.Width + " by " + CurrentSweepSettings.FilmSize.Height + " steps.");
         }
 
         private void btnSaveSweepSettings_Click(object sender, EventArgs e)
@@ -338,7 +338,7 @@ namespace DSLR_Digitizer
             var sweep = new SweepSettings()
             {
                 DslrSize = CurrentSweepSettings.DslrSize,
-                SweepSize = CurrentSweepSettings.SweepSize,
+                FilmSize = CurrentSweepSettings.FilmSize,
                 HuginTemplate = finalFilename,
             };
             SweepSettingsList[name] = sweep;
@@ -518,7 +518,7 @@ namespace DSLR_Digitizer
                 y = -oneStep;
             }
 
-            SemanticComms.Move(x, y);
+            SemanticComms.Move(new Point(x, y));
         }
 
         private void MainScannerForm_KeyDown(object sender, KeyEventArgs e)
@@ -614,7 +614,7 @@ namespace DSLR_Digitizer
                 return;
             }
 
-            SemanticComms.Move(MoveQueue[0].X, MoveQueue[0].Y);
+            SemanticComms.Move(new Point(MoveQueue[0].X, MoveQueue[0].Y));
             MoveQueue.RemoveAt(0);
         }
 
@@ -627,19 +627,21 @@ namespace DSLR_Digitizer
         private void btnNextSweepStep_Click(object sender, EventArgs e)
         {
             SweepStep++;
-            var sweepSize = CurrentSweepSettings.GetSweepSize();
-            if (SweepStep == sweepSize.X * sweepSize.Y)
+            if (SweepStep == CurrentSweepSettings.SweepCount.Width * CurrentSweepSettings.SweepCount.Height - 1) // zero-indexed
             {
                 btnNextSweepStep.Enabled = false;
             }
 
-            if (SweepStep % sweepSize.Y != 0)
+            if (SweepStep % CurrentSweepSettings.SweepCount.Width != 0)
             {
-                SemanticComms.Move(0, CurrentSweepSettings.DslrSize.Y);
+                SemanticComms.Move(new Point(0, CurrentSweepSettings.SweepDelta.Height));
                 return;
             }
 
-            SemanticComms.Move(-CurrentSweepSettings.DslrSize.X, -CurrentSweepSettings.DslrSize.Y * (sweepSize.Y - 1) - 1000);
+            SemanticComms.Move(new Point(
+                -CurrentSweepSettings.SweepDelta.Width,
+                -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepDelta.Height - 1) - 1000
+            ));
             MoveQueue.Add(new Point(0, 1000));
         }
     }

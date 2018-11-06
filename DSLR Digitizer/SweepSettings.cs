@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -6,27 +7,74 @@ namespace DSLR_Digitizer
 {
     public class SweepSettings
     {
-        public Point DslrSize;
-        public Point SweepSize;
+        public Size DslrSize { get { return _dslrSize; } set { _cached = false; _dslrSize = value; } }
+        public Size FilmSize { get { return _filmSize; } set { _cached = false; _filmSize = value; } }
         public string HuginTemplate;
 
-        public Point GetSweepSize()
+        [JsonIgnore]
+        public Size SweepCount { get { return GetSweepCount(); } }
+
+        [JsonIgnore]
+        public Size SweepDelta { get { return GetSweepDelta(); } }
+
+        private bool _cached = false;
+        private Size _dslrSize; // Given
+        private Size _filmSize; // Given
+        private Size _sweepCount; // Computed in ComputeCache()
+        private Size _sweepDelta; // Computed in ComputeCache()
+
+        private Size GetSweepCount()
         {
-            return new Point()
+            if (_cached)
             {
-                X=ComputeSize(DslrSize.X, SweepSize.X),
-                Y=ComputeSize(DslrSize.Y, SweepSize.Y),
+                return _sweepCount;
+            }
+
+            ComputeCache();
+            return _sweepCount;
+        }
+
+        private Size GetSweepDelta()
+        {
+            if (_cached)
+            {
+                return _sweepDelta;
+            }
+
+            ComputeCache();
+            return _sweepDelta;
+        }
+
+        private void ComputeCache()
+        {
+            var actualFilmSize = FilmSize + DslrSize; // This is counter-intuitive, but it's correct
+
+            _sweepCount = new Size()
+            {
+                Width = GetSweepCount(actualFilmSize.Width, _dslrSize.Width),
+                Height = GetSweepCount(actualFilmSize.Height, _dslrSize.Height),
+            };
+
+            _sweepDelta = new Size()
+            {
+                Width = GetOptimalDelta(_filmSize.Width, _sweepCount.Width),
+                Height = GetOptimalDelta(_filmSize.Height, _sweepCount.Height),
             };
         }
 
-        /*
-         * We subtract a unit because we want to make sure floor(3/1) == 2,
-         * which sounds messed up, but it's the only way I could find to include
-         * the last segment.
-         */
-        private int ComputeSize(int dslrSize, int sweepSize)
+        private int GetSweepCount(int actualFilmSize, int dslrSize)
         {
-            return (int)Math.Floor(((double)sweepSize - 1) / dslrSize) + 1;
+            return (int)Math.Ceiling(((double)actualFilmSize) / dslrSize);
+        }
+
+        private int GetOptimalDelta(int rawFilmSize, int sweepCount)
+        {
+            if (sweepCount == 1)
+            {
+                return 0;
+            }
+
+            return (int)Math.Ceiling(rawFilmSize / ((double)sweepCount - 1));
         }
     }
 
