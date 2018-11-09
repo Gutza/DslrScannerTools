@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace DSLR_Digitizer
 {
@@ -46,7 +47,6 @@ namespace DSLR_Digitizer
         }
         private KeyMoveOrders CurrentKeyOrders = KeyMoveOrders.Stop;
         private KeyMoveOrders PreviousKeyOrders = KeyMoveOrders.Stop;
-        private readonly KeyMoveOrders AllKeyOrders = KeyMoveOrders.Left | KeyMoveOrders.Right | KeyMoveOrders.Up | KeyMoveOrders.Down;
 
         public MainScannerForm()
         {
@@ -103,7 +103,7 @@ namespace DSLR_Digitizer
                     }
                     else
                     {
-                        HandleKeyOrders(false);
+                        HandleKeyOrders();
                     }
                     HandleMovementQueue();
                     return;
@@ -482,124 +482,68 @@ namespace DSLR_Digitizer
             }
         }
 
-        private void HandleKeyOrders(bool allowStop)
+        private bool HandleKeyOrders()
         {
-            if (ScannerIsMoving && CurrentKeyOrders == PreviousKeyOrders)
+            CurrentKeyOrders = KeyMoveOrders.Stop;
+            if (!Keyboard.IsKeyDown(Key.LeftAlt))
             {
-                return;
+                StopMoving();
+                return false;
+            }
+
+            if (Keyboard.IsKeyDown(Key.Escape))
+            {
+                StopMoving();
+                return true;
+            }
+
+            var x = 0;
+            var y = 0;
+            if (Keyboard.IsKeyDown(Key.Left))
+            {
+                CurrentKeyOrders |= KeyMoveOrders.Left;
+                x = -ONE_STEP_IN_STEPS;
+            }
+            else if (Keyboard.IsKeyDown(Key.Right))
+            {
+                CurrentKeyOrders |= KeyMoveOrders.Right;
+                x = ONE_STEP_IN_STEPS;
+            }
+            if (Keyboard.IsKeyDown(Key.Up))
+            {
+                CurrentKeyOrders |= KeyMoveOrders.Up;
+                y = ONE_STEP_IN_STEPS;
+            }
+            else if (Keyboard.IsKeyDown(Key.Down))
+            {
+                CurrentKeyOrders |= KeyMoveOrders.Down;
+                y = -ONE_STEP_IN_STEPS;
+            }
+
+            if (CurrentKeyOrders == PreviousKeyOrders)
+            {
+                return true;
             }
             PreviousKeyOrders = CurrentKeyOrders;
 
             if (CurrentKeyOrders == KeyMoveOrders.Stop)
             {
-                if (allowStop)
-                {
-                    StopMoving();
-                }
-                return;
-            }
-
-            var x = 0;
-            var y = 0;
-            if (KeyMoveOrders.Right == (CurrentKeyOrders & KeyMoveOrders.Right))
-            {
-                x = ONE_STEP_IN_STEPS;
-            }
-            else if (KeyMoveOrders.Left == (CurrentKeyOrders & KeyMoveOrders.Left))
-            {
-                x = -ONE_STEP_IN_STEPS;
-            }
-
-            if (KeyMoveOrders.Up == (CurrentKeyOrders & KeyMoveOrders.Up))
-            {
-                y = ONE_STEP_IN_STEPS;
-            }
-            else if (KeyMoveOrders.Down == (CurrentKeyOrders & KeyMoveOrders.Down))
-            {
-                y = -ONE_STEP_IN_STEPS;
+                StopMoving();
+                return true;
             }
 
             SemanticComms.Move(new Point(x, y));
+            return true;
         }
 
-        private void MainScannerForm_KeyDown(object sender, KeyEventArgs e)
+        private void MainScannerForm_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            CurrentKeyOrders = KeyMoveOrders.Stop;
-            if (e.KeyCode == Keys.Escape)
-            {
-                StopMoving();
-            }
-
-            if (e.Modifiers != Keys.Alt)
-            {
-                return;
-            }
-
-            bool handled = true;
-            switch (e.KeyCode)
-            {
-                case Keys.Left:
-                    CurrentKeyOrders |= KeyMoveOrders.Left;
-                    break;
-                case Keys.Right:
-                    CurrentKeyOrders |= KeyMoveOrders.Right;
-                    break;
-                case Keys.Up:
-                    CurrentKeyOrders |= KeyMoveOrders.Up;
-                    break;
-                case Keys.Down:
-                    CurrentKeyOrders |= KeyMoveOrders.Down;
-                    break;
-                default:
-                    handled = false;
-                    break;
-            }
-
-            if (e.Handled = handled)
-            {
-                HandleKeyOrders(true);
-            }
+            e.Handled = HandleKeyOrders();
         }
 
-        private void MainScannerForm_KeyUp(object sender, KeyEventArgs e)
+        private void MainScannerForm_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (CurrentKeyOrders == KeyMoveOrders.Stop)
-            {
-                return;
-            }
-            else if (e.Modifiers != Keys.Alt)
-            {
-                CurrentKeyOrders = KeyMoveOrders.Stop;
-                HandleKeyOrders(true);
-                return;
-            }
-            
-            bool handled = true;
-            switch (e.KeyCode)
-            {
-                case Keys.Escape:
-                    return;
-                case Keys.Up:
-                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Up);
-                    break;
-                case Keys.Down:
-                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Down);
-                    break;
-                case Keys.Left:
-                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Left);
-                    break;
-                case Keys.Right:
-                    CurrentKeyOrders = CurrentKeyOrders & (AllKeyOrders ^ KeyMoveOrders.Right);
-                    break;
-                default:
-                    handled = false;
-                    break;
-            }
-
-            if (e.Handled = handled)
-            {
-                HandleKeyOrders(true);
-            }
+            e.Handled = HandleKeyOrders();
         }
 
         private void StopMoving()

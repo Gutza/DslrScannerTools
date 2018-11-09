@@ -166,12 +166,16 @@ void MoveRelative(long x, long y)
     PrintPosition();
   }
   
-  if (x!=0) {
+  if (x) {
     stepperX.move(x);
+  } else {
+    stepperX.stop();
   }
 
-  if (y!=0) {
+  if (y) {
     stepperY.move(y);
+  } else {
+    stepperY.stop();
   }
 }
 
