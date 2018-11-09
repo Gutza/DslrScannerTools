@@ -26,6 +26,7 @@ namespace DSLR_Digitizer
 
         const int BACKLASH = 1500;
         const int ONE_STEP_IN_STEPS = 1000;
+        const UInt32 INFINITE_STEPS = int.MaxValue;
 
         private string BaseFolder { get { return GetBaseFolder(); } }
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
@@ -88,6 +89,17 @@ namespace DSLR_Digitizer
             MoveQueue.Add(new Point(-BACKLASH, BACKLASH));
         }
 
+        private void HandleMovementQueue()
+        {
+            if (MoveQueue.Count == 0)
+            {
+                return;
+            }
+
+            SemanticComms.Move(new Point(MoveQueue[0].X, MoveQueue[0].Y));
+            MoveQueue.RemoveAt(0);
+        }
+
         private void ProcessScannerMoveChange(object sender, MoveState e)
         {
             navigationGroup.Invoke(new MethodInvoker(delegate
@@ -103,9 +115,8 @@ namespace DSLR_Digitizer
                     }
                     else
                     {
-                        HandleKeyOrders();
+                        HandleMovementQueue();
                     }
-                    HandleMovementQueue();
                     return;
                 }
 
@@ -497,27 +508,27 @@ namespace DSLR_Digitizer
                 return true;
             }
 
-            var x = 0;
-            var y = 0;
+            int x = 0;
+            int y = 0;
             if (Keyboard.IsKeyDown(Key.Left))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Left;
-                x = -ONE_STEP_IN_STEPS;
+                x = (int)-INFINITE_STEPS;
             }
             else if (Keyboard.IsKeyDown(Key.Right))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Right;
-                x = ONE_STEP_IN_STEPS;
+                x = (int)INFINITE_STEPS;
             }
             if (Keyboard.IsKeyDown(Key.Up))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Up;
-                y = ONE_STEP_IN_STEPS;
+                y = (int)INFINITE_STEPS;
             }
             else if (Keyboard.IsKeyDown(Key.Down))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Down;
-                y = -ONE_STEP_IN_STEPS;
+                y = (int)-INFINITE_STEPS;
             }
 
             if (CurrentKeyOrders == PreviousKeyOrders)
@@ -550,17 +561,6 @@ namespace DSLR_Digitizer
         {
             MoveQueue.Clear();
             SemanticComms.Stop();
-        }
-
-        private void HandleMovementQueue()
-        {
-            if (MoveQueue.Count == 0)
-            {
-                return;
-            }
-
-            SemanticComms.Move(new Point(MoveQueue[0].X, MoveQueue[0].Y));
-            MoveQueue.RemoveAt(0);
         }
 
         private void btnResetSweep_Click(object sender, EventArgs e)
