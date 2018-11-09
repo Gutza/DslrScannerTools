@@ -214,12 +214,12 @@ namespace DSLR_Digitizer
 
         public void LogScannerIn(string datagram)
         {
-            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.AppendText("< " + datagram + Environment.NewLine); tbScanLog.Refresh(); }));
+            tbScannerLog.Invoke(new MethodInvoker(delegate { tbScannerLog.AppendText("< " + datagram + Environment.NewLine); tbScannerLog.Refresh(); }));
         }
 
         public void LogScannerOut(string datagram)
         {
-            tbScanLog.Invoke(new MethodInvoker(delegate { tbScanLog.AppendText("> " + datagram + Environment.NewLine); tbScanLog.Refresh(); }));
+            tbScannerLog.Invoke(new MethodInvoker(delegate { tbScannerLog.AppendText("> " + datagram + Environment.NewLine); tbScannerLog.Refresh(); }));
         }
 
         private void iconStop_Click(object sender, EventArgs e)
@@ -524,9 +524,9 @@ namespace DSLR_Digitizer
 
         private void MainScannerForm_KeyDown(object sender, KeyEventArgs e)
         {
+            CurrentKeyOrders = KeyMoveOrders.Stop;
             if (e.KeyCode == Keys.Escape)
             {
-                CurrentKeyOrders = KeyMoveOrders.Stop;
                 StopMoving();
             }
 
@@ -573,7 +573,7 @@ namespace DSLR_Digitizer
                 HandleKeyOrders(true);
                 return;
             }
-
+            
             bool handled = true;
             switch (e.KeyCode)
             {
@@ -633,7 +633,7 @@ namespace DSLR_Digitizer
                 btnNextSweepStep.Enabled = false;
             }
 
-            if (SweepStep % CurrentSweepSettings.SweepCount.Width != 0)
+            if (SweepStep % CurrentSweepSettings.SweepCount.Height != 0)
             {
                 SemanticComms.Move(new Point(0, CurrentSweepSettings.SweepDelta.Height));
                 return;
@@ -641,9 +641,14 @@ namespace DSLR_Digitizer
 
             SemanticComms.Move(new Point(
                 -CurrentSweepSettings.SweepDelta.Width,
-                -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepDelta.Height - 1) - BACKLASH
+                -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepCount.Height - 1) - BACKLASH
             ));
             MoveQueue.Add(new Point(0, BACKLASH));
+        }
+
+        private void cbHidePositionDatagrams_CheckedChanged(object sender, EventArgs e)
+        {
+            SemanticComms.IgnorePositionInLogs = ((CheckBox)sender).Checked;
         }
     }
 }

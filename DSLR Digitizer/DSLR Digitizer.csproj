@@ -118,6 +118,9 @@
     <None Include="Resources\hand-drawn-circle-green.png" />
     <None Include="Resources\hand-drawn-circle-empty.png" />
     <None Include="Resources\hand-drawn-right-empty.png" />
+    <Content Include="Resources\Auto-develop.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\hand-drawn-right-red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

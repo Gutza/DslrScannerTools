@@ -30,13 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             this.navigationGroup = new System.Windows.Forms.GroupBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlNavigation = new System.Windows.Forms.Panel();
             this.commPortGroupbox = new System.Windows.Forms.GroupBox();
             this.btnRefreshCommPortList = new System.Windows.Forms.Button();
             this.commPortCombo = new System.Windows.Forms.ComboBox();
             this.lblComPort = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.GroupBox();
-            this.tbScanLog = new System.Windows.Forms.TextBox();
+            this.pnlScannerLog = new System.Windows.Forms.Panel();
+            this.pnlLogOptions = new System.Windows.Forms.Panel();
+            this.cbHidePositionDatagrams = new System.Windows.Forms.CheckBox();
+            this.tbScannerLog = new System.Windows.Forms.TextBox();
             this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.sweepSettingsGroup = new System.Windows.Forms.GroupBox();
             this.btnDeleteSweepSettings = new System.Windows.Forms.Button();
@@ -51,6 +54,8 @@
             this.btnSetDslrSize = new System.Windows.Forms.Button();
             this.btnResetOrigin = new System.Windows.Forms.Button();
             this.shootingGroup = new System.Windows.Forms.GroupBox();
+            this.btnNextSweepStep = new System.Windows.Forms.Button();
+            this.btnResetSweep = new System.Windows.Forms.Button();
             this.pbHelpSaveLocation = new System.Windows.Forms.PictureBox();
             this.lblShootLocation = new System.Windows.Forms.Label();
             this.btnShootLocation = new System.Windows.Forms.Button();
@@ -65,12 +70,12 @@
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
             this.iconUp = new DSLR_Digitizer.ScannerIcon();
             this.iconStop = new DSLR_Digitizer.ScannerIcon();
-            this.btnResetSweep = new System.Windows.Forms.Button();
-            this.btnNextSweepStep = new System.Windows.Forms.Button();
             this.navigationGroup.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlNavigation.SuspendLayout();
             this.commPortGroupbox.SuspendLayout();
             this.logBox.SuspendLayout();
+            this.pnlScannerLog.SuspendLayout();
+            this.pnlLogOptions.SuspendLayout();
             this.sweepSettingsGroup.SuspendLayout();
             this.shootingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
@@ -84,7 +89,7 @@
             // 
             // navigationGroup
             // 
-            this.navigationGroup.Controls.Add(this.panel1);
+            this.navigationGroup.Controls.Add(this.pnlNavigation);
             this.navigationGroup.Enabled = false;
             this.navigationGroup.Location = new System.Drawing.Point(12, 66);
             this.navigationGroup.Name = "navigationGroup";
@@ -93,17 +98,17 @@
             this.navigationGroup.TabStop = false;
             this.navigationGroup.Text = "Navigation";
             // 
-            // panel1
+            // pnlNavigation
             // 
-            this.panel1.Controls.Add(this.iconRight);
-            this.panel1.Controls.Add(this.iconDown);
-            this.panel1.Controls.Add(this.iconLeft);
-            this.panel1.Controls.Add(this.iconUp);
-            this.panel1.Controls.Add(this.iconStop);
-            this.panel1.Location = new System.Drawing.Point(6, 19);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(318, 316);
-            this.panel1.TabIndex = 2;
+            this.pnlNavigation.Controls.Add(this.iconRight);
+            this.pnlNavigation.Controls.Add(this.iconDown);
+            this.pnlNavigation.Controls.Add(this.iconLeft);
+            this.pnlNavigation.Controls.Add(this.iconUp);
+            this.pnlNavigation.Controls.Add(this.iconStop);
+            this.pnlNavigation.Location = new System.Drawing.Point(6, 19);
+            this.pnlNavigation.Name = "pnlNavigation";
+            this.pnlNavigation.Size = new System.Drawing.Size(318, 316);
+            this.pnlNavigation.TabIndex = 2;
             // 
             // commPortGroupbox
             // 
@@ -154,8 +159,8 @@
             this.logBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.logBox.Controls.Add(this.tbScanLog);
             this.logBox.Controls.Add(this.tbMessageLog);
+            this.logBox.Controls.Add(this.pnlScannerLog);
             this.logBox.Location = new System.Drawing.Point(12, 415);
             this.logBox.Name = "logBox";
             this.logBox.Size = new System.Drawing.Size(785, 346);
@@ -163,17 +168,49 @@
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
             // 
-            // tbScanLog
+            // pnlScannerLog
             // 
-            this.tbScanLog.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tbScanLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbScanLog.Location = new System.Drawing.Point(657, 16);
-            this.tbScanLog.Multiline = true;
-            this.tbScanLog.Name = "tbScanLog";
-            this.tbScanLog.ReadOnly = true;
-            this.tbScanLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbScanLog.Size = new System.Drawing.Size(125, 327);
-            this.tbScanLog.TabIndex = 1;
+            this.pnlScannerLog.Controls.Add(this.tbScannerLog);
+            this.pnlScannerLog.Controls.Add(this.pnlLogOptions);
+            this.pnlScannerLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlScannerLog.Location = new System.Drawing.Point(582, 16);
+            this.pnlScannerLog.Name = "pnlScannerLog";
+            this.pnlScannerLog.Size = new System.Drawing.Size(200, 327);
+            this.pnlScannerLog.TabIndex = 2;
+            // 
+            // pnlLogOptions
+            // 
+            this.pnlLogOptions.Controls.Add(this.cbHidePositionDatagrams);
+            this.pnlLogOptions.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlLogOptions.Location = new System.Drawing.Point(0, 301);
+            this.pnlLogOptions.Name = "pnlLogOptions";
+            this.pnlLogOptions.Size = new System.Drawing.Size(200, 26);
+            this.pnlLogOptions.TabIndex = 3;
+            // 
+            // cbHidePositionDatagrams
+            // 
+            this.cbHidePositionDatagrams.AutoSize = true;
+            this.cbHidePositionDatagrams.Checked = true;
+            this.cbHidePositionDatagrams.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbHidePositionDatagrams.Location = new System.Drawing.Point(6, 6);
+            this.cbHidePositionDatagrams.Name = "cbHidePositionDatagrams";
+            this.cbHidePositionDatagrams.Size = new System.Drawing.Size(139, 17);
+            this.cbHidePositionDatagrams.TabIndex = 0;
+            this.cbHidePositionDatagrams.Text = "Hide position datagrams";
+            this.cbHidePositionDatagrams.UseVisualStyleBackColor = true;
+            this.cbHidePositionDatagrams.CheckedChanged += new System.EventHandler(this.cbHidePositionDatagrams_CheckedChanged);
+            // 
+            // tbScannerLog
+            // 
+            this.tbScannerLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbScannerLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbScannerLog.Location = new System.Drawing.Point(0, 0);
+            this.tbScannerLog.Multiline = true;
+            this.tbScannerLog.Name = "tbScannerLog";
+            this.tbScannerLog.ReadOnly = true;
+            this.tbScannerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbScannerLog.Size = new System.Drawing.Size(200, 301);
+            this.tbScannerLog.TabIndex = 2;
             // 
             // tbMessageLog
             // 
@@ -183,7 +220,7 @@
             this.tbMessageLog.Name = "tbMessageLog";
             this.tbMessageLog.ReadOnly = true;
             this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbMessageLog.Size = new System.Drawing.Size(779, 327);
+            this.tbMessageLog.Size = new System.Drawing.Size(579, 327);
             this.tbMessageLog.TabIndex = 0;
             // 
             // sweepSettingsGroup
@@ -334,6 +371,26 @@
             this.shootingGroup.TabStop = false;
             this.shootingGroup.Text = "Shooting";
             // 
+            // btnNextSweepStep
+            // 
+            this.btnNextSweepStep.Location = new System.Drawing.Point(98, 45);
+            this.btnNextSweepStep.Name = "btnNextSweepStep";
+            this.btnNextSweepStep.Size = new System.Drawing.Size(23, 23);
+            this.btnNextSweepStep.TabIndex = 5;
+            this.btnNextSweepStep.Text = ">";
+            this.btnNextSweepStep.UseVisualStyleBackColor = true;
+            this.btnNextSweepStep.Click += new System.EventHandler(this.btnNextSweepStep_Click);
+            // 
+            // btnResetSweep
+            // 
+            this.btnResetSweep.Location = new System.Drawing.Point(9, 45);
+            this.btnResetSweep.Name = "btnResetSweep";
+            this.btnResetSweep.Size = new System.Drawing.Size(83, 23);
+            this.btnResetSweep.TabIndex = 4;
+            this.btnResetSweep.Text = "Reset sweep";
+            this.btnResetSweep.UseVisualStyleBackColor = true;
+            this.btnResetSweep.Click += new System.EventHandler(this.btnResetSweep_Click);
+            // 
             // pbHelpSaveLocation
             // 
             this.pbHelpSaveLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -474,26 +531,6 @@
             this.iconStop.TabStop = false;
             this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
             // 
-            // btnResetSweep
-            // 
-            this.btnResetSweep.Location = new System.Drawing.Point(9, 45);
-            this.btnResetSweep.Name = "btnResetSweep";
-            this.btnResetSweep.Size = new System.Drawing.Size(83, 23);
-            this.btnResetSweep.TabIndex = 4;
-            this.btnResetSweep.Text = "Reset sweep";
-            this.btnResetSweep.UseVisualStyleBackColor = true;
-            this.btnResetSweep.Click += new System.EventHandler(this.btnResetSweep_Click);
-            // 
-            // btnNextSweepStep
-            // 
-            this.btnNextSweepStep.Location = new System.Drawing.Point(98, 45);
-            this.btnNextSweepStep.Name = "btnNextSweepStep";
-            this.btnNextSweepStep.Size = new System.Drawing.Size(23, 23);
-            this.btnNextSweepStep.TabIndex = 5;
-            this.btnNextSweepStep.Text = ">";
-            this.btnNextSweepStep.UseVisualStyleBackColor = true;
-            this.btnNextSweepStep.Click += new System.EventHandler(this.btnNextSweepStep_Click);
-            // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -514,11 +551,15 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainScannerForm_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainScannerForm_KeyUp);
             this.navigationGroup.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.pnlNavigation.ResumeLayout(false);
             this.commPortGroupbox.ResumeLayout(false);
             this.commPortGroupbox.PerformLayout();
             this.logBox.ResumeLayout(false);
             this.logBox.PerformLayout();
+            this.pnlScannerLog.ResumeLayout(false);
+            this.pnlScannerLog.PerformLayout();
+            this.pnlLogOptions.ResumeLayout(false);
+            this.pnlLogOptions.PerformLayout();
             this.sweepSettingsGroup.ResumeLayout(false);
             this.sweepSettingsGroup.PerformLayout();
             this.shootingGroup.ResumeLayout(false);
@@ -539,7 +580,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox navigationGroup;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlNavigation;
         private ScannerIcon iconRight;
         private ScannerIcon iconDown;
         private ScannerIcon iconLeft;
@@ -551,7 +592,6 @@
         private System.Windows.Forms.Button btnRefreshCommPortList;
         private System.Windows.Forms.GroupBox logBox;
         private System.Windows.Forms.TextBox tbMessageLog;
-        private System.Windows.Forms.TextBox tbScanLog;
         private System.Windows.Forms.GroupBox sweepSettingsGroup;
         private System.Windows.Forms.Button btnResetOrigin;
         private System.Windows.Forms.Button btnSetDslrSize;
@@ -576,6 +616,10 @@
         private System.Windows.Forms.ToolStripStatusLabel tsPosition;
         private System.Windows.Forms.Button btnResetSweep;
         private System.Windows.Forms.Button btnNextSweepStep;
+        private System.Windows.Forms.Panel pnlScannerLog;
+        private System.Windows.Forms.Panel pnlLogOptions;
+        private System.Windows.Forms.TextBox tbScannerLog;
+        private System.Windows.Forms.CheckBox cbHidePositionDatagrams;
     }
 }
 

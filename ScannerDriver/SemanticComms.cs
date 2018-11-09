@@ -42,6 +42,8 @@ namespace ScannerDriver
             Y = 0,
         };
 
+        public static bool IgnorePositionInLogs = true;
+
         public static void Initialize()
         {
             RawComms.OnLogScannerOutput += ProcessScannerOutput;
@@ -72,7 +74,7 @@ namespace ScannerDriver
 
         private static void ProcessScannerOutput(object sender, string datagram)
         {
-            OnRawScannerOutput?.Invoke(null, datagram);
+            var sendDatagram = true;
 
             switch (datagram[0])
             {
@@ -102,6 +104,10 @@ namespace ScannerDriver
                     RawPos.X = int.Parse(match.Groups[1].Value);
                     RawPos.Y = int.Parse(match.Groups[2].Value);
                     OnPositionChange?.Invoke(null, RawPos - new Size(Origin));
+                    if (IgnorePositionInLogs)
+                    {
+                        sendDatagram = false;
+                    }
                     break;
                 case 'I':
                     if (datagram.Equals(RawComms.ISTARTED_DATAGRAM))
@@ -117,11 +123,15 @@ namespace ScannerDriver
                     LogMessage("Failed interpreting the scanner's output: «" + datagram + "»");
                     break;
             }
+
+            if (sendDatagram)
+            {
+                OnRawScannerOutput?.Invoke(null, datagram);
+            }
         }
 
         public static bool Move(Point newPos)
         {
-            var relativePos = newPos - new Size(Origin);
             return RawComms.SendRawDatagram("M" + newPos.X + "," + newPos.Y);
         }
 
