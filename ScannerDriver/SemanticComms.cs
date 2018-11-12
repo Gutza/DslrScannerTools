@@ -206,5 +206,10 @@ namespace ScannerDriver
         {
             return RawComms.SendRawDatagram("S");
         }
+
+        public static bool SetMotorDelay(int newDelay)
+        {
+            return RawComms.SendRawDatagram("P" + newDelay.ToString());
+        }
     }
 }

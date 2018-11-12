@@ -1,7 +1,7 @@
 /*
  * Bogdan's scanner code.
  * Known to work with this specific version of the Unistep2 library:
- * https://github.com/Gutza/Unistep2/tree/24e5ea5262c817c9a3cc612f17d4df5ee34ef862
+ * https://github.com/Gutza/Unistep2/commit/a1c73690c265072f091d4edd90e655ad77975168
  * 
  * Good directions for my scanner: x -> -; y -> +
  * 
@@ -14,6 +14,7 @@
  * Cabc -- comment
  * M123,456 -- move relative to the current position by 123 steps on X, and 456 steps on Y
  * S -- stop moving
+ * P1200 -- how many microseconds to wait between two steps. The command is ignored if less than MIN_STEP_DELAY.
  * 
  * All commands MUST be terminated by a newline character.
  *
@@ -46,13 +47,13 @@ const String PREFIX_POSITION = "P";
 const unsigned long POSITION_DUMP_FREQUENCY_MILLIS = 500;
 unsigned long lastPositionDumpMillis;
 
-unsigned long stepDelay = 1200;
+const unsigned long MIN_STEP_DELAY = 1200;
 byte currMoveState = 0;
 byte prevMoveState = 255; // Force it to output the state when it starts
 
 // Define some steppers and the pins they will use
-Unistep2 stepperY(9, 10, 11, 12, 4096, stepDelay); // pins for IN1, IN2, IN3, IN4, steps per rev, step delay(in micros)
-Unistep2 stepperX(5, 6, 7, 8, 4096, stepDelay); // pins for IN1, IN2, IN3, IN4, steps per rev, step delay(in micros)
+Unistep2 stepperY(9, 10, 11, 12, 4096, MIN_STEP_DELAY); // pins for IN1, IN2, IN3, IN4, steps per rev, step delay(in micros)
+Unistep2 stepperX(5, 6, 7, 8, 4096, MIN_STEP_DELAY); // pins for IN1, IN2, IN3, IN4, steps per rev, step delay(in micros)
 
 void setup()
 {
@@ -185,17 +186,16 @@ void ExecuteSerialCommands()
     return;
   }
 
-  long x_move;
-  long y_move;
   String comment = "";
+  long tmp1, tmp2;
 
   char chr = Serial.read();
   switch(chr) {
     case 'M':
-      x_move = Serial.parseInt();
-      y_move = Serial.parseInt();
+      tmp1 = Serial.parseInt();
+      tmp2 = Serial.parseInt();
       Serial.println(MESSAGE_OK);
-      MoveRelative(x_move, y_move);
+      MoveRelative(tmp1, tmp2);
       break;
       
     case 'S':
@@ -205,7 +205,7 @@ void ExecuteSerialCommands()
 
     case 'C':
       while (true) {
-        char chr = Serial.read();
+        chr = Serial.read();
         if (chr == -1) {
           continue;
         }
@@ -216,6 +216,18 @@ void ExecuteSerialCommands()
       }
       Serial.print(PREFIX_REMARK);
       Serial.println(comment);
+      break;
+      
+    case 'P':
+      tmp1 = Serial.parseInt();
+      if (tmp1 < MIN_STEP_DELAY) {
+        Serial.println(MESSAGE_ERROR);
+        break;
+      }
+
+      Serial.println(MESSAGE_OK);
+      stepperX.setDelay(tmp1);
+      stepperY.setDelay(tmp1);
       break;
       
     case '\r':
