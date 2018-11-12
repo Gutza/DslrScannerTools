@@ -36,11 +36,11 @@
             this.commPortCombo = new System.Windows.Forms.ComboBox();
             this.lblComPort = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.GroupBox();
+            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.pnlScannerLog = new System.Windows.Forms.Panel();
+            this.tbScannerLog = new System.Windows.Forms.TextBox();
             this.pnlLogOptions = new System.Windows.Forms.Panel();
             this.cbHidePositionDatagrams = new System.Windows.Forms.CheckBox();
-            this.tbScannerLog = new System.Windows.Forms.TextBox();
-            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.sweepSettingsGroup = new System.Windows.Forms.GroupBox();
             this.btnDeleteSweepSettings = new System.Windows.Forms.Button();
             this.btnHuginTemplate = new System.Windows.Forms.Button();
@@ -168,6 +168,17 @@
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
             // 
+            // tbMessageLog
+            // 
+            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
+            this.tbMessageLog.Multiline = true;
+            this.tbMessageLog.Name = "tbMessageLog";
+            this.tbMessageLog.ReadOnly = true;
+            this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbMessageLog.Size = new System.Drawing.Size(579, 327);
+            this.tbMessageLog.TabIndex = 0;
+            // 
             // pnlScannerLog
             // 
             this.pnlScannerLog.Controls.Add(this.tbScannerLog);
@@ -177,6 +188,18 @@
             this.pnlScannerLog.Name = "pnlScannerLog";
             this.pnlScannerLog.Size = new System.Drawing.Size(200, 327);
             this.pnlScannerLog.TabIndex = 2;
+            // 
+            // tbScannerLog
+            // 
+            this.tbScannerLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbScannerLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbScannerLog.Location = new System.Drawing.Point(0, 0);
+            this.tbScannerLog.Multiline = true;
+            this.tbScannerLog.Name = "tbScannerLog";
+            this.tbScannerLog.ReadOnly = true;
+            this.tbScannerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbScannerLog.Size = new System.Drawing.Size(200, 301);
+            this.tbScannerLog.TabIndex = 2;
             // 
             // pnlLogOptions
             // 
@@ -199,29 +222,6 @@
             this.cbHidePositionDatagrams.Text = "Hide position datagrams";
             this.cbHidePositionDatagrams.UseVisualStyleBackColor = true;
             this.cbHidePositionDatagrams.CheckedChanged += new System.EventHandler(this.cbHidePositionDatagrams_CheckedChanged);
-            // 
-            // tbScannerLog
-            // 
-            this.tbScannerLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbScannerLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbScannerLog.Location = new System.Drawing.Point(0, 0);
-            this.tbScannerLog.Multiline = true;
-            this.tbScannerLog.Name = "tbScannerLog";
-            this.tbScannerLog.ReadOnly = true;
-            this.tbScannerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbScannerLog.Size = new System.Drawing.Size(200, 301);
-            this.tbScannerLog.TabIndex = 2;
-            // 
-            // tbMessageLog
-            // 
-            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
-            this.tbMessageLog.Multiline = true;
-            this.tbMessageLog.Name = "tbMessageLog";
-            this.tbMessageLog.ReadOnly = true;
-            this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbMessageLog.Size = new System.Drawing.Size(579, 327);
-            this.tbMessageLog.TabIndex = 0;
             // 
             // sweepSettingsGroup
             // 
@@ -325,12 +325,14 @@
             // 
             // btnGoToOrigin
             // 
+            this.btnGoToOrigin.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnGoToOrigin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGoToOrigin.Location = new System.Drawing.Point(98, 19);
             this.btnGoToOrigin.Name = "btnGoToOrigin";
             this.btnGoToOrigin.Size = new System.Drawing.Size(78, 23);
             this.btnGoToOrigin.TabIndex = 4;
             this.btnGoToOrigin.Text = "Go to origin";
-            this.btnGoToOrigin.UseVisualStyleBackColor = true;
+            this.btnGoToOrigin.UseVisualStyleBackColor = false;
             this.btnGoToOrigin.Click += new System.EventHandler(this.btnGoToOrigin_Click);
             // 
             // btnSetDslrSize
@@ -346,12 +348,15 @@
             // 
             // btnResetOrigin
             // 
+            this.btnResetOrigin.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.btnResetOrigin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetOrigin.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnResetOrigin.Location = new System.Drawing.Point(6, 19);
             this.btnResetOrigin.Name = "btnResetOrigin";
             this.btnResetOrigin.Size = new System.Drawing.Size(86, 23);
             this.btnResetOrigin.TabIndex = 0;
             this.btnResetOrigin.Text = "Reset origin";
-            this.btnResetOrigin.UseVisualStyleBackColor = true;
+            this.btnResetOrigin.UseVisualStyleBackColor = false;
             this.btnResetOrigin.Click += new System.EventHandler(this.btnResetOrigin_Click);
             // 
             // shootingGroup
@@ -383,12 +388,15 @@
             // 
             // btnResetSweep
             // 
+            this.btnResetSweep.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.btnResetSweep.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetSweep.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnResetSweep.Location = new System.Drawing.Point(9, 45);
             this.btnResetSweep.Name = "btnResetSweep";
             this.btnResetSweep.Size = new System.Drawing.Size(83, 23);
             this.btnResetSweep.TabIndex = 4;
             this.btnResetSweep.Text = "Reset sweep";
-            this.btnResetSweep.UseVisualStyleBackColor = true;
+            this.btnResetSweep.UseVisualStyleBackColor = false;
             this.btnResetSweep.Click += new System.EventHandler(this.btnResetSweep_Click);
             // 
             // pbHelpSaveLocation
