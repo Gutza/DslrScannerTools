@@ -36,11 +36,11 @@
             this.commPortCombo = new System.Windows.Forms.ComboBox();
             this.lblComPort = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.GroupBox();
+            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.pnlScannerLog = new System.Windows.Forms.Panel();
+            this.tbScannerLog = new System.Windows.Forms.TextBox();
             this.pnlLogOptions = new System.Windows.Forms.Panel();
             this.cbHidePositionDatagrams = new System.Windows.Forms.CheckBox();
-            this.tbScannerLog = new System.Windows.Forms.TextBox();
-            this.tbMessageLog = new System.Windows.Forms.TextBox();
             this.sweepSettingsGroup = new System.Windows.Forms.GroupBox();
             this.btnDeleteSweepSettings = new System.Windows.Forms.Button();
             this.btnHuginTemplate = new System.Windows.Forms.Button();
@@ -65,11 +65,14 @@
             this.openPtoFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsPosition = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnResetFilm = new System.Windows.Forms.Button();
+            this.tbSpeed = new System.Windows.Forms.TrackBar();
             this.iconRight = new DSLR_Digitizer.ScannerIcon();
             this.iconDown = new DSLR_Digitizer.ScannerIcon();
             this.iconLeft = new DSLR_Digitizer.ScannerIcon();
             this.iconUp = new DSLR_Digitizer.ScannerIcon();
             this.iconStop = new DSLR_Digitizer.ScannerIcon();
+            this.lblSpeed = new System.Windows.Forms.Label();
             this.navigationGroup.SuspendLayout();
             this.pnlNavigation.SuspendLayout();
             this.commPortGroupbox.SuspendLayout();
@@ -80,6 +83,7 @@
             this.shootingGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).BeginInit();
@@ -168,6 +172,17 @@
             this.logBox.TabStop = false;
             this.logBox.Text = "Log";
             // 
+            // tbMessageLog
+            // 
+            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
+            this.tbMessageLog.Multiline = true;
+            this.tbMessageLog.Name = "tbMessageLog";
+            this.tbMessageLog.ReadOnly = true;
+            this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbMessageLog.Size = new System.Drawing.Size(579, 327);
+            this.tbMessageLog.TabIndex = 0;
+            // 
             // pnlScannerLog
             // 
             this.pnlScannerLog.Controls.Add(this.tbScannerLog);
@@ -177,6 +192,18 @@
             this.pnlScannerLog.Name = "pnlScannerLog";
             this.pnlScannerLog.Size = new System.Drawing.Size(200, 327);
             this.pnlScannerLog.TabIndex = 2;
+            // 
+            // tbScannerLog
+            // 
+            this.tbScannerLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbScannerLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbScannerLog.Location = new System.Drawing.Point(0, 0);
+            this.tbScannerLog.Multiline = true;
+            this.tbScannerLog.Name = "tbScannerLog";
+            this.tbScannerLog.ReadOnly = true;
+            this.tbScannerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbScannerLog.Size = new System.Drawing.Size(200, 301);
+            this.tbScannerLog.TabIndex = 2;
             // 
             // pnlLogOptions
             // 
@@ -199,29 +226,6 @@
             this.cbHidePositionDatagrams.Text = "Hide position datagrams";
             this.cbHidePositionDatagrams.UseVisualStyleBackColor = true;
             this.cbHidePositionDatagrams.CheckedChanged += new System.EventHandler(this.cbHidePositionDatagrams_CheckedChanged);
-            // 
-            // tbScannerLog
-            // 
-            this.tbScannerLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbScannerLog.Font = new System.Drawing.Font("Liberation Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbScannerLog.Location = new System.Drawing.Point(0, 0);
-            this.tbScannerLog.Multiline = true;
-            this.tbScannerLog.Name = "tbScannerLog";
-            this.tbScannerLog.ReadOnly = true;
-            this.tbScannerLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbScannerLog.Size = new System.Drawing.Size(200, 301);
-            this.tbScannerLog.TabIndex = 2;
-            // 
-            // tbMessageLog
-            // 
-            this.tbMessageLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbMessageLog.Location = new System.Drawing.Point(3, 16);
-            this.tbMessageLog.Multiline = true;
-            this.tbMessageLog.Name = "tbMessageLog";
-            this.tbMessageLog.ReadOnly = true;
-            this.tbMessageLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbMessageLog.Size = new System.Drawing.Size(579, 327);
-            this.tbMessageLog.TabIndex = 0;
             // 
             // sweepSettingsGroup
             // 
@@ -358,6 +362,9 @@
             // 
             this.shootingGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.shootingGroup.Controls.Add(this.lblSpeed);
+            this.shootingGroup.Controls.Add(this.tbSpeed);
+            this.shootingGroup.Controls.Add(this.btnResetFilm);
             this.shootingGroup.Controls.Add(this.btnNextSweepStep);
             this.shootingGroup.Controls.Add(this.btnResetSweep);
             this.shootingGroup.Controls.Add(this.pbHelpSaveLocation);
@@ -456,6 +463,27 @@
             this.tsPosition.Size = new System.Drawing.Size(65, 17);
             this.tsPosition.Text = "(unknown)";
             // 
+            // btnResetFilm
+            // 
+            this.btnResetFilm.Location = new System.Drawing.Point(9, 74);
+            this.btnResetFilm.Name = "btnResetFilm";
+            this.btnResetFilm.Size = new System.Drawing.Size(83, 23);
+            this.btnResetFilm.TabIndex = 6;
+            this.btnResetFilm.Text = "Reset film";
+            this.btnResetFilm.UseVisualStyleBackColor = true;
+            this.btnResetFilm.Click += new System.EventHandler(this.btnResetFilm_Click);
+            // 
+            // tbSpeed
+            // 
+            this.tbSpeed.Location = new System.Drawing.Point(6, 235);
+            this.tbSpeed.Maximum = 120000;
+            this.tbSpeed.Minimum = 1200;
+            this.tbSpeed.Name = "tbSpeed";
+            this.tbSpeed.Size = new System.Drawing.Size(435, 45);
+            this.tbSpeed.TabIndex = 7;
+            this.tbSpeed.Value = 1200;
+            this.tbSpeed.Scroll += new System.EventHandler(this.tbSpeed_Scroll);
+            // 
             // iconRight
             // 
             this.iconRight.IconState = DSLR_Digitizer.ScannerIcon.IconStates.Disabled;
@@ -531,6 +559,15 @@
             this.iconStop.TabStop = false;
             this.iconStop.Click += new System.EventHandler(this.iconStop_Click);
             // 
+            // lblSpeed
+            // 
+            this.lblSpeed.AutoSize = true;
+            this.lblSpeed.Location = new System.Drawing.Point(6, 219);
+            this.lblSpeed.Name = "lblSpeed";
+            this.lblSpeed.Size = new System.Drawing.Size(74, 13);
+            this.lblSpeed.TabIndex = 8;
+            this.lblSpeed.Text = "Moving speed";
+            // 
             // MainScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -567,6 +604,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iconLeft)).EndInit();
@@ -620,6 +658,9 @@
         private System.Windows.Forms.Panel pnlLogOptions;
         private System.Windows.Forms.TextBox tbScannerLog;
         private System.Windows.Forms.CheckBox cbHidePositionDatagrams;
+        private System.Windows.Forms.Button btnResetFilm;
+        private System.Windows.Forms.TrackBar tbSpeed;
+        private System.Windows.Forms.Label lblSpeed;
     }
 }
 

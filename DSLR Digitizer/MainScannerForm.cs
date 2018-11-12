@@ -52,6 +52,7 @@ namespace DSLR_Digitizer
         public MainScannerForm()
         {
             InitializeComponent();
+            tbSpeed.Value = tbSpeed.Maximum;
             NavigationIcons = new List<ScannerIcon>()
             {
                 iconLeft,
@@ -593,6 +594,16 @@ namespace DSLR_Digitizer
         private void cbHidePositionDatagrams_CheckedChanged(object sender, EventArgs e)
         {
             SemanticComms.IgnorePositionInLogs = ((CheckBox)sender).Checked;
+        }
+
+        private void btnResetFilm_Click(object sender, EventArgs e)
+        {
+            SemanticComms.Move(new Point(CurrentSweepSettings.DslrSize.Width * 3, -CurrentSweepSettings.DslrSize.Height));
+        }
+
+        private void tbSpeed_Scroll(object sender, EventArgs e)
+        {
+            SemanticComms.SetMotorDelay(tbSpeed.Maximum + tbSpeed.Minimum - tbSpeed.Value);
         }
     }
 }
