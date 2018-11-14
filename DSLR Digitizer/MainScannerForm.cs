@@ -34,6 +34,8 @@ namespace DSLR_Digitizer
         private string HuginPanoramaFolder { get { return GetPanoramaFolder(); } }
         private List<Point> MoveQueue = new List<Point>();
         private bool MoveToOriginRequested = false;
+        private readonly TimeSpan PulseSpan = new TimeSpan(0, 0, 0, 0, 500);
+        private DateTime LastPulse;
 
         int SweepStep;
         int PrevImageFileCount;
@@ -424,6 +426,9 @@ namespace DSLR_Digitizer
 
             CurrentSweepSettings = SweepSettingsList[sweepName];
             tbHuginTemplate.Text = CurrentSweepSettings.HuginTemplate;
+            btnStartSweep.Enabled = true;
+            btnNextSweepStep.Enabled = true;
+            btnResetSweep.Enabled = true;
         }
 
         private void btnShootLocation_Click(object sender, EventArgs e)
@@ -620,7 +625,9 @@ namespace DSLR_Digitizer
 
             PrevImageFileCount = GetImageFileCount();
 
+            LastPulse = DateTime.Now;
             btnStartSweep.BackColor = Color.Red;
+            btnStartSweep.ForeColor = Color.White;
             btnStartSweep.Text = "Stop";
             timSweep.Start();
         }
@@ -632,6 +639,19 @@ namespace DSLR_Digitizer
 
         private void timSweep_Tick(object sender, EventArgs e)
         {
+            if (DateTime.Now - LastPulse > PulseSpan)
+            {
+                LastPulse = DateTime.Now;
+                if (btnStartSweep.BackColor == Color.Red)
+                {
+                    btnStartSweep.BackColor = Color.Black;
+                }
+                else
+                {
+                    btnStartSweep.BackColor = Color.Red;
+                }
+            }
+
             var currentImageFileCount = GetImageFileCount();
             if (currentImageFileCount == PrevImageFileCount)
             {
@@ -649,7 +669,8 @@ namespace DSLR_Digitizer
         private void StopSweep()
         {
             timSweep.Stop();
-            btnStartSweep.BackColor = Control.DefaultBackColor;
+            btnStartSweep.BackColor = SystemColors.Control;
+            btnStartSweep.ForeColor = SystemColors.ControlText;
             btnStartSweep.Text = "Start";
         }
     }
