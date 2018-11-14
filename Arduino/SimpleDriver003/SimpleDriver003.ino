@@ -121,11 +121,9 @@ void PrintPosition()
   Serial.print(PREFIX_POSITION);
   Serial.print(stepperX.currentPosition());
   Serial.print(",");
-  Serial.println(stepperY.currentPosition());
+  Serial.print(stepperY.currentPosition());
+  Serial.println();
 }
-
-//const int MAX_X_BACKLASH = +600;
-//const int MIN_Y_BACKLASH = -960;
 
 void PrintMoveState()
 {

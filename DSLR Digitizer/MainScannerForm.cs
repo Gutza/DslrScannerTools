@@ -36,6 +36,7 @@ namespace DSLR_Digitizer
         private bool MoveToOriginRequested = false;
 
         int SweepStep;
+        int PrevImageFileCount;
 
         [Flags]
         enum KeyMoveOrders
@@ -571,16 +572,23 @@ namespace DSLR_Digitizer
 
         private void btnNextSweepStep_Click(object sender, EventArgs e)
         {
+            AdvanceSweepStep();
+        }
+
+        private bool AdvanceSweepStep()
+        {
+            bool lastSweep = false;
             SweepStep++;
             if (SweepStep == CurrentSweepSettings.SweepCount.Width * CurrentSweepSettings.SweepCount.Height - 1) // zero-indexed
             {
                 btnNextSweepStep.Enabled = false;
+                lastSweep = true;
             }
 
             if (SweepStep % CurrentSweepSettings.SweepCount.Height != 0)
             {
                 SemanticComms.Move(new Point(0, CurrentSweepSettings.SweepDelta.Height));
-                return;
+                return !lastSweep;
             }
 
             SemanticComms.Move(new Point(
@@ -588,11 +596,61 @@ namespace DSLR_Digitizer
                 -CurrentSweepSettings.SweepDelta.Height * (CurrentSweepSettings.SweepCount.Height - 1) - BACKLASH
             ));
             MoveQueue.Add(new Point(0, BACKLASH));
+
+            return !lastSweep;
         }
 
         private void cbHidePositionDatagrams_CheckedChanged(object sender, EventArgs e)
         {
             SemanticComms.IgnorePositionInLogs = ((CheckBox)sender).Checked;
+        }
+
+        private void btnStartSweep_Click(object sender, EventArgs e)
+        {
+            if (timSweep.Enabled)
+            {
+                StopSweep();
+                return;
+            }
+
+            if (!Directory.Exists(tbShootLocation.Text))
+            {
+                return;
+            }
+
+            PrevImageFileCount = GetImageFileCount();
+
+            btnStartSweep.BackColor = Color.Red;
+            btnStartSweep.Text = "Stop";
+            timSweep.Start();
+        }
+
+        private int GetImageFileCount()
+        {
+            return Directory.GetFiles(tbShootLocation.Text).Length;
+        }
+
+        private void timSweep_Tick(object sender, EventArgs e)
+        {
+            var currentImageFileCount = GetImageFileCount();
+            if (currentImageFileCount == PrevImageFileCount)
+            {
+                return;
+            }
+
+            PrevImageFileCount = currentImageFileCount;
+
+            if (!AdvanceSweepStep())
+            {
+                StopSweep();
+            }
+        }
+
+        private void StopSweep()
+        {
+            timSweep.Stop();
+            btnStartSweep.BackColor = Control.DefaultBackColor;
+            btnStartSweep.Text = "Start";
         }
     }
 }
