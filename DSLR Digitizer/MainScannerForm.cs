@@ -26,7 +26,7 @@ namespace DSLR_Digitizer
 
         const int BACKLASH = 1500;
         const int ONE_STEP_IN_STEPS = 1000;
-        const UInt32 INFINITE_STEPS = int.MaxValue;
+        const int INFINITE_STEPS = int.MaxValue;
 
         private string BaseFolder { get { return GetBaseFolder(); } }
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
@@ -88,8 +88,8 @@ namespace DSLR_Digitizer
         private void ExecuteMoveToOrigin()
         {
             MoveToOriginRequested = false;
-            SemanticComms.Move(new Point(BACKLASH, -BACKLASH) - new Size(SemanticComms.GetCurrentPos()));
-            MoveQueue.Add(new Point(-BACKLASH, BACKLASH));
+            var origin = SemanticComms.GetCurrentPos();
+            MoveWithBacklash(new Point(-origin.X, -origin.Y));
         }
 
         private void HandleMovementQueue()
@@ -243,22 +243,22 @@ namespace DSLR_Digitizer
 
         private void iconRight_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(ONE_STEP_IN_STEPS, 0));
+            SemanticComms.Move(new Point(INFINITE_STEPS, 0));
         }
 
         private void iconUp_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(0, ONE_STEP_IN_STEPS));
+            SemanticComms.Move(new Point(0, INFINITE_STEPS));
         }
 
         private void iconDown_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(0, -ONE_STEP_IN_STEPS));
+            SemanticComms.Move(new Point(0, -INFINITE_STEPS));
         }
 
         private void iconLeft_Click(object sender, EventArgs e)
         {
-            SemanticComms.Move(new Point(-ONE_STEP_IN_STEPS, 0));
+            SemanticComms.Move(new Point(-INFINITE_STEPS, 0));
         }
 
         private void btnResetOrigin_Click(object sender, EventArgs e)
@@ -429,6 +429,7 @@ namespace DSLR_Digitizer
             btnStartSweep.Enabled = true;
             btnNextSweepStep.Enabled = true;
             btnResetSweep.Enabled = true;
+            btnGoToMidFrame.Enabled = true;
         }
 
         private void btnShootLocation_Click(object sender, EventArgs e)
@@ -519,22 +520,22 @@ namespace DSLR_Digitizer
             if (Keyboard.IsKeyDown(Key.Left))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Left;
-                x = (int)-INFINITE_STEPS;
+                x = -INFINITE_STEPS;
             }
             else if (Keyboard.IsKeyDown(Key.Right))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Right;
-                x = (int)INFINITE_STEPS;
+                x = INFINITE_STEPS;
             }
             if (Keyboard.IsKeyDown(Key.Up))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Up;
-                y = (int)INFINITE_STEPS;
+                y = INFINITE_STEPS;
             }
             else if (Keyboard.IsKeyDown(Key.Down))
             {
                 CurrentKeyOrders |= KeyMoveOrders.Down;
-                y = (int)-INFINITE_STEPS;
+                y = -INFINITE_STEPS;
             }
 
             if (CurrentKeyOrders == PreviousKeyOrders)
@@ -672,6 +673,29 @@ namespace DSLR_Digitizer
             btnStartSweep.BackColor = SystemColors.Control;
             btnStartSweep.ForeColor = SystemColors.ControlText;
             btnStartSweep.Text = "Start";
+        }
+
+        private void btnResetFilm_Click(object sender, EventArgs e)
+        {
+            MoveWithBacklash(new Point(81500, -20959));
+        }
+
+        private void btnNextFrame_Click(object sender, EventArgs e)
+        {
+            MoveWithBacklash(new Point(-16427+2113, -20839+526));
+        }
+
+        private void MoveWithBacklash(Point relativeMove)
+        {
+            SemanticComms.Move(new Point(relativeMove.X + BACKLASH, relativeMove.Y - BACKLASH));
+            MoveQueue.Add(new Point(-BACKLASH, BACKLASH));
+        }
+
+        private void btnGoToMidFrame_Click(object sender, EventArgs e)
+        {
+            var x = CurrentSweepSettings.FilmSize.Width / 2;
+            var y = CurrentSweepSettings.FilmSize.Height / 2;
+            MoveWithBacklash(new Point(-x, y));
         }
     }
 }
