@@ -112,6 +112,10 @@
             this.btnProcess.UseVisualStyleBackColor = true;
             this.btnProcess.Click += new System.EventHandler(this.btnProcess_Click);
             // 
+            // ptoSaveFileDialog
+            // 
+            this.ptoSaveFileDialog.Filter = "PTO files|*.pto|All files|*.*";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

@@ -27,6 +27,11 @@ namespace Hugin_Templater
 
         private void btnTiffFolder_Click(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(tbTemplateFile.Text) && File.Exists(tbTemplateFile.Text))
+            {
+                tiffOpenFolderDialog.SelectedPath = Path.GetDirectoryName(tbTemplateFile.Text);
+            }
+
             if (tiffOpenFolderDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -58,10 +63,11 @@ namespace Hugin_Templater
                     }
 
                     if (!tiffEnumerator.MoveNext())
-                    { 
+                    {
                         MessageBox.Show("Too few files!");
                         return;
                     }
+
                     output += line.Substring(0, imageMatch.Groups[2].Index) + Path.GetFileName(tiffEnumerator.Current) + @"""" + Environment.NewLine;
                 }
             }
@@ -72,8 +78,9 @@ namespace Hugin_Templater
                 return;
             }
 
-            ptoSaveFileDialog.FileName = Path.GetFullPath(tbTiffFolder.Text);
-            if (ptoSaveFileDialog.ShowDialog()!=DialogResult.OK)
+            ptoSaveFileDialog.InitialDirectory = Path.GetFullPath(tbTiffFolder.Text);
+            ptoSaveFileDialog.FileName = "1. Template.pto";
+            if (ptoSaveFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
