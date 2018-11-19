@@ -94,6 +94,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSharp-WindowTitleWatcher\WindowTitleWatcher.csproj">
+      <Project>{985548b4-06df-4d44-8b4a-9ef40278b011}</Project>
+      <Name>WindowTitleWatcher</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScannerDriver\ScannerDriver.csproj">
       <Project>{d47c242f-4fa0-45b8-995f-ff6b908bf5cd}</Project>
       <Name>ScannerDriver</Name>

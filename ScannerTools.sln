@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSLR Digitizer", "DSLR Digi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScannerDriver", "ScannerDriver\ScannerDriver.csproj", "{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowTitleWatcher", "CSharp-WindowTitleWatcher\WindowTitleWatcher.csproj", "{985548B4-06DF-4D44-8B4A-9EF40278B011}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D47C242F-4FA0-45B8-995F-FF6B908BF5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{985548B4-06DF-4D44-8B4A-9EF40278B011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{985548B4-06DF-4D44-8B4A-9EF40278B011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{985548B4-06DF-4D44-8B4A-9EF40278B011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{985548B4-06DF-4D44-8B4A-9EF40278B011}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

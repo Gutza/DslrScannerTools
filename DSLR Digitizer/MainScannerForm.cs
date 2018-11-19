@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
+using WindowTitleWatcher;
+using WindowTitleWatcher.Util;
 
 namespace DSLR_Digitizer
 {
@@ -13,6 +16,8 @@ namespace DSLR_Digitizer
     {
         List<ScannerIcon> NavigationIcons;
         string ComPort = null;
+
+        WindowInfo EOSWindow = null;
 
         SweepSettingsCollection SweepSettingsList = new SweepSettingsCollection();
         SweepSettings CurrentSweepSettings = new SweepSettings();
@@ -39,6 +44,9 @@ namespace DSLR_Digitizer
 
         int SweepStep;
         int PrevImageFileCount;
+
+        bool _isSweepRunning = false;
+        bool _isShotNeeded = false;
 
         [Flags]
         enum KeyMoveOrders
@@ -92,15 +100,16 @@ namespace DSLR_Digitizer
             MoveWithBacklash(new Point(-origin.X, -origin.Y));
         }
 
-        private void HandleMovementQueue()
+        private bool HandleMovementQueue()
         {
             if (MoveQueue.Count == 0)
             {
-                return;
+                return false;
             }
 
             SemanticComms.Move(new Point(MoveQueue[0].X, MoveQueue[0].Y));
             MoveQueue.RemoveAt(0);
+            return true;
         }
 
         private void ProcessScannerMoveChange(object sender, MoveState e)
@@ -116,9 +125,9 @@ namespace DSLR_Digitizer
                     {
                         ExecuteMoveToOrigin();
                     }
-                    else
+                    else if (!HandleMovementQueue() && _isShotNeeded)
                     {
-                        HandleMovementQueue();
+                        ShootDSLR();
                     }
                     return;
                 }
@@ -583,6 +592,7 @@ namespace DSLR_Digitizer
 
         private bool AdvanceSweepStep()
         {
+            _isShotNeeded = true;
             bool lastSweep = false;
             SweepStep++;
             if (SweepStep == CurrentSweepSettings.SweepCount.Width * CurrentSweepSettings.SweepCount.Height - 1) // zero-indexed
@@ -621,16 +631,78 @@ namespace DSLR_Digitizer
 
             if (!Directory.Exists(tbShootLocation.Text))
             {
+                LogMessage("Please provide a valid shoot location before starting the sweep.");
                 return;
             }
 
+            Windows.ForEach(winInfo => {
+                if (winInfo.ProcessName.Equals("EOS Utility 3") && winInfo.Title.TrimStart().StartsWith("EOS"))
+                { 
+                    EOSWindow = winInfo;
+                    return false;
+                }
+                return true;
+            });
+
+            if (EOSWindow == null)
+            {
+                LogMessage("Please start the EOS Utility live shooting window before attempting the sweep");
+                return;
+            }
+
+            EnsureDslrInForeground();
+
+            _isSweepRunning = true;
+            _isShotNeeded = true;
             PrevImageFileCount = GetImageFileCount();
+
+            if (!ScannerIsMoving)
+            {
+                ShootDSLR();
+            }
 
             LastPulse = DateTime.Now;
             btnStartSweep.BackColor = Color.Red;
             btnStartSweep.ForeColor = Color.White;
             btnStartSweep.Text = "Stop";
             timSweep.Start();
+        }
+
+        private void ShootDSLR()
+        {
+            _isShotNeeded = false;
+            EnsureDslrInForeground();
+            EOSWindow.ClickOnPoint(new Point(200, 70));
+        }
+
+        private bool IsDslrInForeground()
+        {
+            if (EOSWindow == null)
+            {
+                return false;
+            }
+
+            return Windows.GetForegroundWindowInfo().Handle.Equals(EOSWindow.Handle) && EOSWindow.IsVisible;
+        }
+
+        private void EnsureDslrInForeground()
+        {
+            if (IsDslrInForeground())
+            {
+                return;
+            }
+
+            EOSWindow.SetForeground();
+            while (true)
+            {
+                if (IsDslrInForeground())
+                {
+                    break;
+                }
+                Application.DoEvents();
+                Thread.Sleep(50);
+            }
+            Thread.Sleep(100);
         }
 
         private int GetImageFileCount()
@@ -673,6 +745,7 @@ namespace DSLR_Digitizer
             btnStartSweep.BackColor = SystemColors.Control;
             btnStartSweep.ForeColor = SystemColors.ControlText;
             btnStartSweep.Text = "Start";
+            _isSweepRunning = false;
         }
 
         private void btnResetFilm_Click(object sender, EventArgs e)
