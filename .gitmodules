@@ -1,0 +1,3 @@
+[submodule "CSharp-WindowTitleWatcher"]
+	path = CSharp-WindowTitleWatcher
+	url = https://github.com/Gutza/CSharp-WindowTitleWatcher.git
