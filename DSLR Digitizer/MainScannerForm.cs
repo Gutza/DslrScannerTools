@@ -2,12 +2,13 @@
 using ScannerDriver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
-using WindowTitleWatcher;
 using WindowTitleWatcher.Util;
 
 namespace DSLR_Digitizer
@@ -43,7 +44,7 @@ namespace DSLR_Digitizer
         private DateTime LastPulse;
 
         int SweepStep;
-        int PrevImageFileCount;
+        List<string> PrevImageFileList;
 
         bool _isSweepRunning = false;
         bool _isShotNeeded = false;
@@ -635,9 +636,10 @@ namespace DSLR_Digitizer
                 return;
             }
 
-            Windows.ForEach(winInfo => {
+            Windows.ForEach(winInfo =>
+            {
                 if (winInfo.ProcessName.Equals("EOS Utility 3") && winInfo.Title.TrimStart().StartsWith("EOS"))
-                { 
+                {
                     EOSWindow = winInfo;
                     return false;
                 }
@@ -654,7 +656,7 @@ namespace DSLR_Digitizer
 
             _isSweepRunning = true;
             _isShotNeeded = true;
-            PrevImageFileCount = GetImageFileCount();
+            PrevImageFileList = GetImageFileList();
 
             if (!ScannerIsMoving)
             {
@@ -705,9 +707,9 @@ namespace DSLR_Digitizer
             Thread.Sleep(100);
         }
 
-        private int GetImageFileCount()
+        private List<string> GetImageFileList()
         {
-            return Directory.GetFiles(tbShootLocation.Text).Length;
+            return new List<string>(Directory.GetFiles(tbShootLocation.Text, "*.cr2"));
         }
 
         private void timSweep_Tick(object sender, EventArgs e)
@@ -725,13 +727,30 @@ namespace DSLR_Digitizer
                 }
             }
 
-            var currentImageFileCount = GetImageFileCount();
-            if (currentImageFileCount == PrevImageFileCount)
+            var currentImageFileList = GetImageFileList();
+            if (currentImageFileList.Count == PrevImageFileList.Count)
             {
                 return;
             }
 
-            PrevImageFileCount = currentImageFileCount;
+            var diffImageFileList = currentImageFileList.Select(file => (string)file.Clone()).ToList();
+            foreach (var prevImage in PrevImageFileList)
+            {
+                diffImageFileList.Remove(prevImage);
+            }
+
+            if (diffImageFileList.Count != 1)
+            {
+                LogMessage("Number of new CR2 images is different from 1: " + diffImageFileList.Count);
+                StopSweep();
+                return;
+            }
+
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", Path.Combine(tbShootLocation.Text, diffImageFileList[0]));
+            p.Start();
+
+            PrevImageFileList = currentImageFileList;
 
             if (!AdvanceSweepStep())
             {
@@ -755,7 +774,7 @@ namespace DSLR_Digitizer
 
         private void btnNextFrame_Click(object sender, EventArgs e)
         {
-            MoveWithBacklash(new Point(-16427+2113, -20839+526));
+            MoveWithBacklash(new Point(-16427 + 2113, -20839 + 526));
         }
 
         private void MoveWithBacklash(Point relativeMove)
