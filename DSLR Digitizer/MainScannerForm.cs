@@ -772,17 +772,36 @@ namespace DSLR_Digitizer
 
                 ShotsInSweep++;
 
-                Process p = new Process();
-                p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", Path.Combine(tbShootLocation.Text, diffImageFileList[0]));
-                p.Start();
-
-                PrevImageFileList = currentImageFileList;
+                ProcessRaw(diffImageFileList[0]);
             }
 
             if (_isSweepRunning && shotDetected && !AdvanceSweepStep())
             {
                 StopSweep();
             }
+        }
+
+        private void ProcessRaw(string originalFullFilename)
+        {
+            var originalRawFilename = Path.GetFileName(originalFullFilename);
+            var finalPath = Path.Combine(tbShootLocation.Text, GetFilmFolderName(), GetFrameFolderName());
+            Directory.CreateDirectory(finalPath);
+            var fullPathFinalFilename = Path.Combine(finalPath, originalRawFilename);
+            File.Move(originalFullFilename, fullPathFinalFilename);
+
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", fullPathFinalFilename);
+            p.Start();
+        }
+
+        private string GetFrameFolderName()
+        {
+            return GetFilmFolderName() + "P" + ((int)numFrameNumber.Value).ToString("D2");
+        }
+
+        private string GetFilmFolderName()
+        {
+            return "F" + ((int)numFilmNumber.Value).ToString("D3");
         }
 
         private void StopSweep()
@@ -796,11 +815,13 @@ namespace DSLR_Digitizer
         private void btnResetFilm_Click(object sender, EventArgs e)
         {
             MoveWithBacklash(new Point(81500, -20959));
+            numFrameNumber.Value++;
         }
 
         private void btnNextFrame_Click(object sender, EventArgs e)
         {
             MoveWithBacklash(new Point(-16427 + 2113, -20839 + 526));
+            numFrameNumber.Value++;
         }
 
         private void MoveWithBacklash(Point relativeMove)
