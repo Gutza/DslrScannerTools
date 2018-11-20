@@ -44,10 +44,12 @@ namespace DSLR_Digitizer
         private DateTime LastPulse;
 
         int SweepStep;
+        int ShotsInSweep;
         List<string> PrevImageFileList;
 
         bool _isSweepRunning = false;
-        bool _isShotNeeded = false;
+        bool _isShotRequested = false;
+        bool _isShotInProgress = false;
 
         [Flags]
         enum KeyMoveOrders
@@ -97,8 +99,13 @@ namespace DSLR_Digitizer
         private void ExecuteMoveToOrigin()
         {
             MoveToOriginRequested = false;
-            var origin = SemanticComms.GetCurrentPos();
-            MoveWithBacklash(new Point(-origin.X, -origin.Y));
+            var currentPos = SemanticComms.GetCurrentPos();
+            if (currentPos.Equals(new Point(0, 0)))
+            {
+                return; // Duh!
+            }
+
+            MoveWithBacklash(new Point(-currentPos.X, -currentPos.Y));
         }
 
         private bool HandleMovementQueue()
@@ -126,7 +133,7 @@ namespace DSLR_Digitizer
                     {
                         ExecuteMoveToOrigin();
                     }
-                    else if (!HandleMovementQueue() && _isShotNeeded)
+                    else if (!HandleMovementQueue() && _isShotRequested)
                     {
                         ShootDSLR();
                     }
@@ -582,7 +589,7 @@ namespace DSLR_Digitizer
 
         private void btnResetSweep_Click(object sender, EventArgs e)
         {
-            SweepStep = 0;
+            SweepStep = ShotsInSweep = 0;
             btnNextSweepStep.Enabled = true;
         }
 
@@ -593,7 +600,7 @@ namespace DSLR_Digitizer
 
         private bool AdvanceSweepStep()
         {
-            _isShotNeeded = true;
+            _isShotRequested = true;
             bool lastSweep = false;
             SweepStep++;
             if (SweepStep == CurrentSweepSettings.SweepCount.Width * CurrentSweepSettings.SweepCount.Height - 1) // zero-indexed
@@ -624,7 +631,7 @@ namespace DSLR_Digitizer
 
         private void btnStartSweep_Click(object sender, EventArgs e)
         {
-            if (timSweep.Enabled)
+            if (_isSweepRunning)
             {
                 StopSweep();
                 return;
@@ -655,7 +662,7 @@ namespace DSLR_Digitizer
             EnsureDslrInForeground();
 
             _isSweepRunning = true;
-            _isShotNeeded = true;
+            _isShotRequested = true;
             PrevImageFileList = GetImageFileList();
 
             if (!ScannerIsMoving)
@@ -667,14 +674,14 @@ namespace DSLR_Digitizer
             btnStartSweep.BackColor = Color.Red;
             btnStartSweep.ForeColor = Color.White;
             btnStartSweep.Text = "Stop";
-            timSweep.Start();
         }
 
         private void ShootDSLR()
         {
-            _isShotNeeded = false;
+            _isShotRequested = false;
             EnsureDslrInForeground();
             EOSWindow.ClickOnPoint(new Point(200, 70));
+            _isShotInProgress = true;
         }
 
         private bool IsDslrInForeground()
@@ -712,47 +719,67 @@ namespace DSLR_Digitizer
             return new List<string>(Directory.GetFiles(tbShootLocation.Text, "*.cr2"));
         }
 
-        private void timSweep_Tick(object sender, EventArgs e)
+        private void PulseSweepButton()
         {
-            if (DateTime.Now - LastPulse > PulseSpan)
-            {
-                LastPulse = DateTime.Now;
-                if (btnStartSweep.BackColor == Color.Red)
-                {
-                    btnStartSweep.BackColor = Color.Black;
-                }
-                else
-                {
-                    btnStartSweep.BackColor = Color.Red;
-                }
-            }
-
-            var currentImageFileList = GetImageFileList();
-            if (currentImageFileList.Count == PrevImageFileList.Count)
+            if (DateTime.Now - LastPulse <= PulseSpan)
             {
                 return;
             }
 
-            var diffImageFileList = currentImageFileList.Select(file => (string)file.Clone()).ToList();
-            foreach (var prevImage in PrevImageFileList)
+            LastPulse = DateTime.Now;
+            if (btnStartSweep.BackColor == Color.Red)
             {
-                diffImageFileList.Remove(prevImage);
+                btnStartSweep.BackColor = Color.Black;
+            }
+            else
+            {
+                btnStartSweep.BackColor = Color.Red;
+            }
+        }
+
+        private void mainTimer_Tick(object sender, EventArgs e)
+        {
+            if (_isSweepRunning)
+            {
+                PulseSweepButton();
             }
 
-            if (diffImageFileList.Count != 1)
+            var shotDetected = false;
+
+            if (_isShotInProgress)
             {
-                LogMessage("Number of new CR2 images is different from 1: " + diffImageFileList.Count);
-                StopSweep();
-                return;
+                var currentImageFileList = GetImageFileList();
+                if (currentImageFileList.Count == PrevImageFileList.Count)
+                {
+                    return;
+                }
+
+                _isShotInProgress = false;
+                shotDetected = true;
+
+                var diffImageFileList = currentImageFileList.Select(file => (string)file.Clone()).ToList();
+                foreach (var prevImage in PrevImageFileList)
+                {
+                    diffImageFileList.Remove(prevImage);
+                }
+
+                if (diffImageFileList.Count != 1)
+                {
+                    LogMessage("Number of new CR2 images is different from 1: " + diffImageFileList.Count);
+                    StopSweep();
+                    return;
+                }
+
+                ShotsInSweep++;
+
+                Process p = new Process();
+                p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", Path.Combine(tbShootLocation.Text, diffImageFileList[0]));
+                p.Start();
+
+                PrevImageFileList = currentImageFileList;
             }
 
-            Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", Path.Combine(tbShootLocation.Text, diffImageFileList[0]));
-            p.Start();
-
-            PrevImageFileList = currentImageFileList;
-
-            if (!AdvanceSweepStep())
+            if (_isSweepRunning && shotDetected && !AdvanceSweepStep())
             {
                 StopSweep();
             }
@@ -760,11 +787,10 @@ namespace DSLR_Digitizer
 
         private void StopSweep()
         {
-            timSweep.Stop();
+            _isSweepRunning = false;
             btnStartSweep.BackColor = SystemColors.Control;
             btnStartSweep.ForeColor = SystemColors.ControlText;
             btnStartSweep.Text = "Start";
-            _isSweepRunning = false;
         }
 
         private void btnResetFilm_Click(object sender, EventArgs e)
