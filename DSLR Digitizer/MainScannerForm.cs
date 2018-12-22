@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
+using WindowsInput;
 using WindowTitleWatcher.Util;
 
 namespace DSLR_Digitizer
@@ -33,6 +34,8 @@ namespace DSLR_Digitizer
         const int BACKLASH = 1500;
         const int ONE_STEP_IN_STEPS = 1000;
         const int INFINITE_STEPS = int.MaxValue;
+
+        private bool WasAltDown = false;
 
         private string BaseFolder { get { return GetBaseFolder(); } }
         private string SweepSettingsFilename { get { return Path.Combine(BaseFolder, SWEEP_SETTINGS_FILENAME); } }
@@ -443,8 +446,7 @@ namespace DSLR_Digitizer
 
             CurrentSweepSettings = SweepSettingsList[sweepName];
             tbHuginTemplate.Text = CurrentSweepSettings.HuginTemplate;
-            btnStartSweep.Enabled = true;
-            btnNextSweepStep.Enabled = true;
+            btnNextSweepStep.Enabled = btnStartSweep.Enabled = true;
             btnResetSweep.Enabled = true;
             btnGoToMidFrame.Enabled = true;
         }
@@ -522,9 +524,15 @@ namespace DSLR_Digitizer
             CurrentKeyOrders = KeyMoveOrders.Stop;
             if (!Keyboard.IsKeyDown(Key.LeftAlt))
             {
-                StopMoving();
+                if (WasAltDown)
+                {
+                    StopMoving();
+                }
+                WasAltDown = false;
                 return false;
             }
+
+            WasAltDown = true;
 
             if (Keyboard.IsKeyDown(Key.Escape))
             {
@@ -587,10 +595,15 @@ namespace DSLR_Digitizer
             SemanticComms.Stop();
         }
 
-        private void btnResetSweep_Click(object sender, EventArgs e)
+        private void ResetSweep()
         {
             SweepStep = ShotsInSweep = 0;
-            btnNextSweepStep.Enabled = true;
+            btnNextSweepStep.Enabled = btnStartSweep.Enabled = true;
+        }
+
+        private void btnResetSweep_Click(object sender, EventArgs e)
+        {
+            ResetSweep();
         }
 
         private void btnNextSweepStep_Click(object sender, EventArgs e)
@@ -605,7 +618,7 @@ namespace DSLR_Digitizer
             SweepStep++;
             if (SweepStep == CurrentSweepSettings.SweepCount.Width * CurrentSweepSettings.SweepCount.Height - 1) // zero-indexed
             {
-                btnNextSweepStep.Enabled = false;
+                btnNextSweepStep.Enabled = btnStartSweep.Enabled = false;
                 lastSweep = true;
             }
 
@@ -678,10 +691,34 @@ namespace DSLR_Digitizer
 
         private void ShootDSLR()
         {
+            LogMessage("Shooting DSLR frame " + ShotsInSweep);
+
             _isShotRequested = false;
             EnsureDslrInForeground();
-            EOSWindow.ClickOnPoint(new Point(200, 70));
+
+            var insim = new InputSimulator();
+            MoveMouse(insim, 200, 70);
+
+            for (int i = 0; i < 40; i++)
+            {
+                Application.DoEvents();
+                Thread.Sleep(100);
+            }
+
+            insim.Mouse.LeftButtonClick();
+
+            //EOSWindow.ClickOnPoint(new Point(200, 70));
+            Thread.Sleep(50);
+
             _isShotInProgress = true;
+        }
+
+        private void MoveMouse(InputSimulator sim, int x, int y)
+        {
+            sim.Mouse.MoveMouseToPositionOnVirtualDesktop(
+                (EOSWindow.GetRectangle().Left + x) / (double)SystemInformation.VirtualScreen.Width * 65535.0,
+                (EOSWindow.GetRectangle().Top + y) / (double)SystemInformation.VirtualScreen.Height * 65535.0
+            );
         }
 
         private bool IsDslrInForeground()
@@ -787,7 +824,34 @@ namespace DSLR_Digitizer
             var finalPath = Path.Combine(tbShootLocation.Text, GetFilmFolderName(), GetFrameFolderName());
             Directory.CreateDirectory(finalPath);
             var fullPathFinalFilename = Path.Combine(finalPath, originalRawFilename);
+
+            // Shitty way of ensuring the file handle is closed by the Canon utility thing.
+            // Source: https://stackoverflow.com/questions/876473/is-there-a-way-to-check-if-a-file-is-in-use
+            // N.B. We don't catch anything other than IOException
+            while (true)
+            {
+                try
+                {
+                    using (var fp = File.OpenWrite(originalFullFilename))
+                    {
+                        break;
+                    }
+                }
+                catch (IOException)
+                {
+                    if (!File.Exists(originalFullFilename))
+                    {
+                        throw; // Uh-oh, this is worse than we thought!
+                    }
+                    continue;
+                }
+            }
             File.Move(originalFullFilename, fullPathFinalFilename);
+
+            if (!cbPostProcess.Checked)
+            {
+                return;
+            }
 
             Process p = new Process();
             p.StartInfo = new ProcessStartInfo(@"Resources\Auto-develop.exe", fullPathFinalFilename);
@@ -816,12 +880,14 @@ namespace DSLR_Digitizer
         {
             MoveWithBacklash(new Point(81500, -20959));
             numFrameNumber.Value++;
+            ResetSweep();
         }
 
         private void btnNextFrame_Click(object sender, EventArgs e)
         {
             MoveWithBacklash(new Point(-16427 + 2113, -20839 + 526));
             numFrameNumber.Value++;
+            ResetSweep();
         }
 
         private void MoveWithBacklash(Point relativeMove)

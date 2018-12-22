@@ -47,7 +47,7 @@ const String PREFIX_POSITION = "P";
 const unsigned long POSITION_DUMP_FREQUENCY_MILLIS = 500;
 unsigned long lastPositionDumpMillis;
 
-const unsigned long MIN_STEP_DELAY = 1200;
+const unsigned long MIN_STEP_DELAY = 1000;
 byte currMoveState = 0;
 byte prevMoveState = 255; // Force it to output the state when it starts
 

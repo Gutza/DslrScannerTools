@@ -59,6 +59,10 @@
             this.btnSetDslrSize = new System.Windows.Forms.Button();
             this.btnResetOrigin = new System.Windows.Forms.Button();
             this.shootingGroup = new System.Windows.Forms.GroupBox();
+            this.numFrameNumber = new System.Windows.Forms.NumericUpDown();
+            this.lblFrameNumber = new System.Windows.Forms.Label();
+            this.numFilmNumber = new System.Windows.Forms.NumericUpDown();
+            this.lblFilmNumber = new System.Windows.Forms.Label();
             this.btnGoToMidFrame = new System.Windows.Forms.Button();
             this.btnNextFrame = new System.Windows.Forms.Button();
             this.btnResetFilm = new System.Windows.Forms.Button();
@@ -75,10 +79,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsPosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainTimer = new System.Windows.Forms.Timer(this.components);
-            this.lblFilmNumber = new System.Windows.Forms.Label();
-            this.numFilmNumber = new System.Windows.Forms.NumericUpDown();
-            this.lblFrameNumber = new System.Windows.Forms.Label();
-            this.numFrameNumber = new System.Windows.Forms.NumericUpDown();
+            this.cbPostProcess = new System.Windows.Forms.CheckBox();
             this.navigationGroup.SuspendLayout();
             this.pnlNavigation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconRight)).BeginInit();
@@ -92,10 +93,10 @@
             this.pnlLogOptions.SuspendLayout();
             this.sweepSettingsGroup.SuspendLayout();
             this.shootingGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFrameNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFilmNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numFilmNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numFrameNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // navigationGroup
@@ -449,6 +450,7 @@
             // 
             this.shootingGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.shootingGroup.Controls.Add(this.cbPostProcess);
             this.shootingGroup.Controls.Add(this.numFrameNumber);
             this.shootingGroup.Controls.Add(this.lblFrameNumber);
             this.shootingGroup.Controls.Add(this.numFilmNumber);
@@ -469,6 +471,38 @@
             this.shootingGroup.TabIndex = 6;
             this.shootingGroup.TabStop = false;
             this.shootingGroup.Text = "Shooting";
+            // 
+            // numFrameNumber
+            // 
+            this.numFrameNumber.Location = new System.Drawing.Point(226, 129);
+            this.numFrameNumber.Name = "numFrameNumber";
+            this.numFrameNumber.Size = new System.Drawing.Size(59, 20);
+            this.numFrameNumber.TabIndex = 13;
+            // 
+            // lblFrameNumber
+            // 
+            this.lblFrameNumber.AutoSize = true;
+            this.lblFrameNumber.Location = new System.Drawing.Point(146, 131);
+            this.lblFrameNumber.Name = "lblFrameNumber";
+            this.lblFrameNumber.Size = new System.Drawing.Size(74, 13);
+            this.lblFrameNumber.TabIndex = 12;
+            this.lblFrameNumber.Text = "Frame number";
+            // 
+            // numFilmNumber
+            // 
+            this.numFilmNumber.Location = new System.Drawing.Point(75, 129);
+            this.numFilmNumber.Name = "numFilmNumber";
+            this.numFilmNumber.Size = new System.Drawing.Size(59, 20);
+            this.numFilmNumber.TabIndex = 11;
+            // 
+            // lblFilmNumber
+            // 
+            this.lblFilmNumber.AutoSize = true;
+            this.lblFilmNumber.Location = new System.Drawing.Point(6, 131);
+            this.lblFilmNumber.Name = "lblFilmNumber";
+            this.lblFilmNumber.Size = new System.Drawing.Size(63, 13);
+            this.lblFilmNumber.TabIndex = 10;
+            this.lblFilmNumber.Text = "Film number";
             // 
             // btnGoToMidFrame
             // 
@@ -610,37 +644,17 @@
             this.mainTimer.Enabled = true;
             this.mainTimer.Tick += new System.EventHandler(this.mainTimer_Tick);
             // 
-            // lblFilmNumber
+            // cbPostProcess
             // 
-            this.lblFilmNumber.AutoSize = true;
-            this.lblFilmNumber.Location = new System.Drawing.Point(6, 131);
-            this.lblFilmNumber.Name = "lblFilmNumber";
-            this.lblFilmNumber.Size = new System.Drawing.Size(63, 13);
-            this.lblFilmNumber.TabIndex = 10;
-            this.lblFilmNumber.Text = "Film number";
-            // 
-            // numFilmNumber
-            // 
-            this.numFilmNumber.Location = new System.Drawing.Point(75, 129);
-            this.numFilmNumber.Name = "numFilmNumber";
-            this.numFilmNumber.Size = new System.Drawing.Size(59, 20);
-            this.numFilmNumber.TabIndex = 11;
-            // 
-            // lblFrameNumber
-            // 
-            this.lblFrameNumber.AutoSize = true;
-            this.lblFrameNumber.Location = new System.Drawing.Point(146, 131);
-            this.lblFrameNumber.Name = "lblFrameNumber";
-            this.lblFrameNumber.Size = new System.Drawing.Size(74, 13);
-            this.lblFrameNumber.TabIndex = 12;
-            this.lblFrameNumber.Text = "Frame number";
-            // 
-            // numFrameNumber
-            // 
-            this.numFrameNumber.Location = new System.Drawing.Point(226, 129);
-            this.numFrameNumber.Name = "numFrameNumber";
-            this.numFrameNumber.Size = new System.Drawing.Size(59, 20);
-            this.numFrameNumber.TabIndex = 13;
+            this.cbPostProcess.AutoSize = true;
+            this.cbPostProcess.Checked = true;
+            this.cbPostProcess.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbPostProcess.Location = new System.Drawing.Point(226, 49);
+            this.cbPostProcess.Name = "cbPostProcess";
+            this.cbPostProcess.Size = new System.Drawing.Size(87, 17);
+            this.cbPostProcess.TabIndex = 14;
+            this.cbPostProcess.Text = "Post-process";
+            this.cbPostProcess.UseVisualStyleBackColor = true;
             // 
             // MainScannerForm
             // 
@@ -680,11 +694,11 @@
             this.sweepSettingsGroup.PerformLayout();
             this.shootingGroup.ResumeLayout(false);
             this.shootingGroup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFrameNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFilmNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbHelpSaveLocation)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numFilmNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numFrameNumber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -742,6 +756,7 @@
         private System.Windows.Forms.Label lblFrameNumber;
         private System.Windows.Forms.NumericUpDown numFilmNumber;
         private System.Windows.Forms.Label lblFilmNumber;
+        private System.Windows.Forms.CheckBox cbPostProcess;
     }
 }
 
